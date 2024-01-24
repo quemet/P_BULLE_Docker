@@ -1,5 +1,5 @@
 # P_BULLE_Docker
-Container MySQL
+1. Container MySQL
 ======
 `docker pull mysql/mysql-server:5.7` -> **pull l'image mysql-server**  
 `docker images` -> **Permet de check si l'image a bien été ajouté**  
