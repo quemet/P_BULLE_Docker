@@ -10,3 +10,4 @@ Container MySQL
 `ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';` -> **Change the password**  
 `CREATE USER 'root'@'%' IDENTIFIED BY 'root';` -> **Create a user**  
 `GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;` -> **Give all priviligies to root** 
+Source : [Alt Text](https://www.devgi.com/2018/11/install-mysql-docker-windows.html)
