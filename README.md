@@ -1,7 +1,7 @@
 # P_BULLE_Docker
 Container MySQL
 ======
-<font size="1">`docker pull mysql/mysql-server:5.7` -> **pull the docker image**  
+<font size="0.5">`docker pull mysql/mysql-server:5.7` -> **pull the docker image**  
 `docker images` -> **Check docker image**  
 `docker run --name mysql1 -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_DATABASE=homedb -p 3306:3306 -d mysql/mysql-server:5.7` -> **Run mysql instance**  
 `docker ps` -> **Check docker processes**  
