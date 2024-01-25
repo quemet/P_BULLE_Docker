@@ -7,7 +7,7 @@ Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry
 Donc cela sera une application en 2 dimensions.  
 ## 2. Fonctionnalité
    1. UserInput
-      * Left Arrow -> Permettra de déplacer le cube d'une cellule vers la gauche.
+      * ![Left Arrow](https://github.com/quemet/P_BULLE_Docker/main/Image/LeftArrow.jpg) -> Permettra de déplacer le cube d'une cellule vers la gauche.
       * Right Arrow -> Permettra de déplacer le cube d'une cellule vers la droite.
       * Space -> Permet de faire sauter le cube.
         
