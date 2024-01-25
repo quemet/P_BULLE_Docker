@@ -1,4 +1,15 @@
 # P_BULLE_Docker
+Application with the library .NET
+======
+## 1. Résumé de l'application
+Mon application est une app en Windows Forms à l'aide du language C#.  
+Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry Dash'.  
+Donc cela sera une application en 2 dimensions.  
+## 2. Fonctionnalité
+   1. UserInput
+      
+Container utilisé
+======
 # 1. Container MySQL
 `docker pull mysql/mysql-server:5.7` -> **pull l'image mysql-server**  
 `docker images` -> **Permet de check si l'image a bien été ajouté**  
