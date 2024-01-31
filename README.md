@@ -4,7 +4,8 @@ Application with the library .NET
 ## 1. Résumé de l'application
 Mon application est une app en APS.NET qui est donc une application Web avec du HTML, CSS, JS et du C#.  
 Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry Dash' avec pour l'instant uniquement un seul niveau.  
-Donc cela sera une application en 2 dimensions.  
+Donc cela sera une application en 2 dimensions.
+Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotnet.microsoft.com/en-us/apps/aspnet)
 ## 2. Fonctionnalité
    1. UserInput
       * Left Arrow -> Permet de déplacer le cube d'une cellule vers la gauche.
