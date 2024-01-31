@@ -2,7 +2,7 @@
 Application with the library .NET
 ======
 ## 1. Résumé de l'application
-Mon application est une app en Windows Forms à l'aide du language C#.  
+Mon application est une app en APS.NET qui est donc une application Web avec du HTML, CSS, JS et du C#.  
 Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry Dash' avec pour l'instant uniquement un seul niveau.  
 Donc cela sera une application en 2 dimensions.  
 ## 2. Fonctionnalité
