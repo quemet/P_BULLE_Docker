@@ -43,7 +43,7 @@ Container utilisé
 * `CREATE USER 'root'@'%' IDENTIFIED BY 'root';` -> **permet de créer un utilisateur**  
 * `GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;` -> **Donne tout les privilèges à root**  
 **Source : [create a MySQL Container](https://www.devgi.com/2018/11/install-mysql-docker-windows.html)**  
-# 2. Container APS.
+# 2. Container APS.NET
 * Avant de commencer vérifier que APS.NET a bien été téléchaargé sinon Visual Studio Installer -> Visual Studio 2022 -> Modifier -> APS.NET -> Installer
 * Ouvrez Visual Studio et sélectionnez Nouveau projet.
 * Créer un projet -> Application web ASP.NET Core(La première proposition) -> Suivant.
