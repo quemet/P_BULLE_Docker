@@ -55,3 +55,6 @@ Container utilisé
 * Une fenêtre apparait sur le certificat de développement si vous leur faites confiance cliquer sur Oui sinon sur Non
 * Après une fenêtre de navigateur va s'afficher avec votre application Web afficher.  
 **Source : [create a APS.NET Container](https://learn.microsoft.com/fr-fr/aspnet/core/tutorials/razor-pages/razor-pages-start?view=aspnetcore-8.0&tabs=visual-studio)**
+# 3. Container Ubuntu
+* `docker pull ubuntu` -> Permet de prendre l'image ubuntu pour la mettre dans les dockers images.
+* `docker run -it ubuntu` -> Permet de run l'image et afficher le bash.
