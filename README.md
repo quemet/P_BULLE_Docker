@@ -7,12 +7,19 @@ Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry
 Donc cela sera une application en 2 dimensions.
 Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotnet.microsoft.com/en-us/apps/aspnet)
 
-&nbsp;Languages and Tools 🛠
+&nbsp;Languages, Frameworkd and Tools 🛠
 ------
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?&style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?&style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23F7DF1E.svg?&style=for-the-badge&logo=javascript&logoColor=black)
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
+
+![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
+![Blazor](https://img.shields.io/badge/blazor-%235C2D91.svg?style=for-the-badge&logo=blazor&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+
+![Visual Studio](https://img.shields.io/badge/Visual%20Studio-5C2D91.svg?style=for-the-badge&logo=visual-studio&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 ## 2. Fonctionnalité
    1. UserInput
@@ -43,5 +50,5 @@ Container utilisé
 * Ensuite pour Run le projet Ctrl + F5
 * Une fenêtre apparaît sur les certificats SSL d'IIS Express si vous leur faites confiance cliquer Oui sinon Non
 * Une fenêtre apparait sur le certificat de développement si vous leur faites confiance cliquer sur Oui sinon sur Non
-* Après une fenêtre de navigateur va s'afficher avec votre application Web afficher.
+* Après une fenêtre de navigateur va s'afficher avec votre application Web afficher.  
 **Source : [create a APS.NET Container](https://learn.microsoft.com/fr-fr/aspnet/core/tutorials/razor-pages/razor-pages-start?view=aspnetcore-8.0&tabs=visual-studio)**
