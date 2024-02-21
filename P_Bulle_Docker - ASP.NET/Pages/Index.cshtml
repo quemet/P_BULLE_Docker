@@ -3,126 +3,33 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@{
+    Database db = new Database("localhost", 3306, "db_bulle_docker", "root", "root");
+    Player player = new Player("red");
+    db.ConnectionDatabase();
+}
 
-<div class="text-center">
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
-    <div id="gameBoard">
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-        <div id="square"></div>
-    </div>
+<div class="text-center" id="body">
+    @for (int i = 0; i < 10; i++)
+    {
+        <div id="gameBoard">
+        @for (int j = 0; j < 10; j++)
+        {
+            string squareId = "";
+            if(i == 0)
+            {
+                squareId = $"0{i * 10 + j}";
+            } else {
+                squareId = $"{i * 10 + j}";
+            }
+            <div id="@squareId" class="square"></div>
+        }
+        </div>
+    }
 </div>
+@{
+    byte[] playerCoo;
+    playerCoo = player.GameEngine();
+}
+<div id="data">@playerCoo[0] @playerCoo[1]</div>
+<script src="./js/site.js"></script>
