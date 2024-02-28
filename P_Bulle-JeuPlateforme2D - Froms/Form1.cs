@@ -143,6 +143,11 @@ namespace P_Bulle_JeuPlateforme2D
             panel2.Controls.Add(player_label);
             Thread.Sleep(300);
         }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 
     class Player
