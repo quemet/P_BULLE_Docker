@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
 using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components;
 
 namespace P_Bulle_Docker.Pages
 {
@@ -17,36 +18,36 @@ namespace P_Bulle_Docker.Pages
 
     public class Database : PageModel
     {
-        private string serverIp;
-        private int serverPort;
-        private string databaseName;
-        private string databasePassword;
-        private string databaseUsername;
-        private string connectionString;
-        public Database(string serverIp, int serverPort, string databaseName, string databasePassword, string databaseUsername)
+        public string serverIp;
+        public string serverPort;
+        public string databaseName;
+        public string databasePassword;
+        public string databaseUsername;
+        public string connectionString;
+        public Database(string serverIp, string serverPort, string databaseName, string databaseUsername, string databasePassword)
         {
             this.serverIp = serverIp;
             this.serverPort = serverPort;
             this.databaseName = databaseName;
-            this.databasePassword = databasePassword;
             this.databaseUsername = databaseUsername;
-            this.connectionString = $"server={serverIp};port={serverPort};database={databaseName};user={databaseUsername};password={databasePassword}";
+            this.databasePassword = databasePassword;
+            connectionString = "Server=172.17.0.2;Port=3306;Database=db_bulle_docker;user=root;Password=root;";
         }
         public void ConnectionDatabase()
         {
-            MySqlConnection conn = new MySqlConnection(this.connectionString);
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
-                Console.WriteLine("Connected to MySQL");
+                try
+                {
+                    Console.WriteLine("Connection to the database...");
+                    connection.Open();
+                    Console.WriteLine("Connected to the database.");
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine("Erreur lors de la connexion à la base de données : " + ex);
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-            conn.Close();
         }
     }
 
@@ -62,40 +63,41 @@ namespace P_Bulle_Docker.Pages
         public Player(string skinColor)
         {
             SkinColor = skinColor;
-            this.x = 0;
-            this.y = 9;
-            this.score = 0;
-            this.direction = "Right";
+            x = 0;
+            y = 9;
+            score = 0;
+            direction = "Right";
         }
 
         public void Move()
         {
-            if(this.direction == "Right")
+            if(direction == "Right")
             {
-                if (this.x == 9)
+                if (x == 9)
                 {
-                    this.y -= 1;
-                    this.direction = "Left";
+                    y -= 1;
+                    direction = "Left";
                 } else {
-                    this.x += 1;
+                    x += 1;
                 }
             } else {
-                if(this.x == 0)
+                if(x == 0)
                 {
-                    this.y -= 1;
-                    this.direction = "Right";
+                    y -= 1;
+                    direction = "Right";
                 } else {
-                    this.x -= 1;
+                    x -= 1;
                 }
             }
         }
 
-        public byte[] GameEngine()
+        public void GameEngine()
         {
             Move();
-            Console.WriteLine("Wating...");
+
+            Console.WriteLine("Waiting...");
+
             Thread.Sleep(1000);
-            return new byte[] {this.x, this.y};
         }
     }
 }

@@ -1,12 +1,24 @@
 ﻿@page
 @model IndexModel
+@using Microsoft.JSInterop;
+@inject IJSRuntime JS
 @{
     ViewData["Title"] = "Home page";
 }
+
+<script src="./js/site.js"></script>
+
 @{
-    Database db = new Database("localhost", 3306, "db_bulle_docker", "root", "root");
+    async Task Hello()
+    {
+        await JS.InvokeVoidAsync("changeId");
+    }
+
+    Database db = new Database("172.17.0.2", "3306", "db_bulle_docker", "root", "root");
     Player player = new Player("red");
-    db.ConnectionDatabase();
+    // db.ConnectionDatabase();
+    player.GameEngine();
+    Hello();
 }
 
 <div class="text-center" id="body">
@@ -22,14 +34,7 @@
             } else {
                 squareId = $"{i * 10 + j}";
             }
-            <div id="@squareId" class="square"></div>
         }
         </div>
     }
 </div>
-@{
-    byte[] playerCoo;
-    playerCoo = player.GameEngine();
-}
-<div id="data">@playerCoo[0] @playerCoo[1]</div>
-<script src="./js/site.js"></script>
