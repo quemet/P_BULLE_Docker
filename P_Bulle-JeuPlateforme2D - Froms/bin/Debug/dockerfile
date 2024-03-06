@@ -1,0 +1,7 @@
+FROM mono:latest
+ 
+RUN mkdir /opt/app
+ 
+COPY P_Bulle-JeuPlateforme2D.exe /opt/app
+ 
+CMD ["mono", "/opt/app/P_Bulle-JeuPlateforme2D.exe"]

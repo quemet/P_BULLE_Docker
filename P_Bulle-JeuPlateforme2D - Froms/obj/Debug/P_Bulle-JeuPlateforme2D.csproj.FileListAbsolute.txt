@@ -1,0 +1,11 @@
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\bin\Debug\P_Bulle-JeuPlateforme2D.exe.config
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\bin\Debug\P_Bulle-JeuPlateforme2D.exe
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\bin\Debug\P_Bulle-JeuPlateforme2D.pdb
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle_JeuPlateforme2D.Form1.resources
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle_JeuPlateforme2D.Properties.Resources.resources
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle-JeuPlateforme2D.csproj.GenerateResource.cache
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle-JeuPlateforme2D.csproj.CoreCompileInputs.cache
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle-JeuPlateforme2D.exe
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle-JeuPlateforme2D.pdb
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle-JeuPlateforme2D.csproj.AssemblyReference.cache
+C:\Users\pg03lul\Desktop\P_BULLE_Docker\P_Bulle-JeuPlateforme2D - Froms\obj\Debug\P_Bulle-JeuPlateforme2D.csproj.SuggestedBindingRedirects.cache
