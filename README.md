@@ -50,6 +50,7 @@ Container utilisé
 Dockerfile
 ======
 ```dockerfile
+# Il utilise l'image de base mcr.microsoft.com/dotnet/aspnet:6.0, qui contient l'environnement d'exécution ASP.NET Core.
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
