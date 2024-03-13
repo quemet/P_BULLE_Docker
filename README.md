@@ -46,3 +46,28 @@ Container utilisé
 * Une fenêtre apparait sur le certificat de développement si vous leur faites confiance cliquer sur Oui sinon sur Non
 * Après une fenêtre de navigateur va s'afficher avec votre application Web afficher.  
 **Source : [create a APS.NET Container](https://learn.microsoft.com/fr-fr/aspnet/core/tutorials/razor-pages/razor-pages-start?view=aspnetcore-8.0&tabs=visual-studio)**
+
+Dockerfile
+======
+```docker
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["P_Bulle_Docker.csproj", "."]
+RUN dotnet restore "./P_Bulle_Docker.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "P_Bulle_Docker.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "P_Bulle_Docker.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
+```
