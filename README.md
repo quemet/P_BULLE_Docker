@@ -75,25 +75,25 @@ RUN dotnet restore "./P_Bulle_Docker.csproj"
 # Copie tout le contenu du répertoire actuel dans le répertoire de travail.
 COPY . .
 
-# Modifie le répertoire de travail vers /src/..
+# Modifie le répertoire de travail vers /src/.
 WORKDIR "/src/."
 
-# Exécute la commande dotnet build pour construire l'application en mode Release (-c Release) et la place dans le répertoire /app/build.
+# Exécute la commande dotnet build pour construire l'application en mode Release et la place dans le répertoire /app/build.
 RUN dotnet build "P_Bulle_Docker.csproj" -c Release -o /app/build
 
-# Utilise l'étape de construction (build) comme base.
+# Utilise l'étape de construction comme base.
 FROM build AS publish
 
 # Exécute la commande dotnet publish pour créer une version publiée de l'application dans le répertoire /app/publish.
 RUN dotnet publish "P_Bulle_Docker.csproj" -c Release -o /app/publish
 
-# Utilise l'étape de base (base) comme base.
+# Utilise l'étape de base comme base.
 FROM base AS final
 
 # Définit le répertoire de travail comme /app.
 WORKDIR /app
 
-# Copie le contenu du répertoire de publication (/app/publish) depuis l'étape précédente.
+# Copie le contenu du répertoire de publication depuis l'étape précédente.
 COPY --from=publish /app/publish .
 
 # Définit le point d'entrée de l'image Docker avec la commande pour exécuter l'application ASP.NET Core.
