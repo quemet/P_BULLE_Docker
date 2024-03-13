@@ -4,7 +4,9 @@ Application with the library .NET
 ## 1. Résumé de l'application
 Mon application est une app en APS.NET qui est donc une application Web avec du HTML, CSS, JS et du C#.  
 Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry Dash' avec pour l'instant uniquement un seul niveau.  
-Donc cela sera une application en 2 dimensions.
+Donc cela sera une application en 2 dimensions. 
+Vu le temps imposé c'est compliqué de finire mais le but est de dockeriser l'application ASP.NET et la base de données MySQL.
+Dans ce Readme le but est de présenter les conteneurs utilisé et présenter le dockerfile.
 Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotnet.microsoft.com/en-us/apps/aspnet)
 
 &nbsp;Languages, Framework and Tools 🛠
@@ -26,15 +28,11 @@ Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotn
 Container utilisé
 ======
 # 1. Container MySQL
-* `docker pull mysql:latest` -> **pull l'image mysql-server**  
+* `docker pull mysql:latest` -> **pull l'image mysql**  
 * `docker images` -> **Permet de check si l'image a bien été ajouté**  
 * `docker run --name mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_DATABASE=mysqldatabaser -p 3306:3306 -d mysql` -> **crée le conteneur docker**   
-* `docker ps` -> **Permet de check que le conteneur a bien été crée**  
-* `docker logs mysql1 2>&1 | FindStr GENERATED` -> **Génére un mot de passe aléatoire**  
-* `windthy docker exec -it mysql mysql -uroot -p` -> **Se connecte au conteneur docker**  
-* `ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';` -> **Change le mot de passe pour root**  
-* `CREATE USER 'root'@'%' IDENTIFIED BY 'root';` -> **permet de créer un utilisateur**  
-* `GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;` -> **Donne tout les privilèges à root**  
+* `docker ps` -> **Permet de check que le conteneur a bien été crée**
+* `docker exec -i mysql mysql -uroot -proot` -> **Permet de se connecter**
 **Source : [create a MySQL Container](https://www.devgi.com/2018/11/install-mysql-docker-windows.html)**  
 # 2. Container APS.NET
 * Avant de commencer vérifier que APS.NET a bien été téléchaargé sinon Visual Studio Installer -> Visual Studio 2022 -> Modifier -> APS.NET -> Installer
@@ -48,6 +46,3 @@ Container utilisé
 * Une fenêtre apparait sur le certificat de développement si vous leur faites confiance cliquer sur Oui sinon sur Non
 * Après une fenêtre de navigateur va s'afficher avec votre application Web afficher.  
 **Source : [create a APS.NET Container](https://learn.microsoft.com/fr-fr/aspnet/core/tutorials/razor-pages/razor-pages-start?view=aspnetcore-8.0&tabs=visual-studio)**
-# 3. Container Ubuntu
-* `docker pull ubuntu` -> Permet de prendre l'image ubuntu pour la mettre dans les dockers images.
-* `docker run -it ubuntu` -> Permet de run l'image et afficher le bash.
