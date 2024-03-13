@@ -52,23 +52,50 @@ Dockerfile
 ```dockerfile
 # Il utilise l'image de base mcr.microsoft.com/dotnet/aspnet:6.0, qui contient l'environnement d'exécution ASP.NET Core.
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+
+# Définit le répertoire de travail comme /app.
 WORKDIR /app
+
+# Expose les ports 80 et 443 qui sont généralement utilisés pour le trafic HTTP et HTTPS.
 EXPOSE 80
 EXPOSE 443
 
+# Utilise l'image mcr.microsoft.com/dotnet/sdk:6.0 en tant que base, qui contient l'environnement de développement .NET Core.
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+
+# Définit le répertoire de travail comme /src.
 WORKDIR /src
+
+# Copie le fichier de projet P_Bulle_Docker.csproj dans le répertoire de travail.
 COPY ["P_Bulle_Docker.csproj", "."]
+
+# Exécute la commande dotnet restore pour restaurer les dépendances du projet.
 RUN dotnet restore "./P_Bulle_Docker.csproj"
+
+# Copie tout le contenu du répertoire actuel dans le répertoire de travail.
 COPY . .
+
+# Modifie le répertoire de travail vers /src/..
 WORKDIR "/src/."
+
+# Exécute la commande dotnet build pour construire l'application en mode Release (-c Release) et la place dans le répertoire /app/build.
 RUN dotnet build "P_Bulle_Docker.csproj" -c Release -o /app/build
 
+# Utilise l'étape de construction (build) comme base.
 FROM build AS publish
+
+# Exécute la commande dotnet publish pour créer une version publiée de l'application dans le répertoire /app/publish.
 RUN dotnet publish "P_Bulle_Docker.csproj" -c Release -o /app/publish
 
+# Utilise l'étape de base (base) comme base.
 FROM base AS final
+
+# Définit le répertoire de travail comme /app.
 WORKDIR /app
+
+# Copie le contenu du répertoire de publication (/app/publish) depuis l'étape précédente.
 COPY --from=publish /app/publish .
+
+# Définit le point d'entrée de l'image Docker avec la commande pour exécuter l'application ASP.NET Core.
 ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
 ```
