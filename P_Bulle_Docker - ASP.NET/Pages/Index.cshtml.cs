@@ -31,22 +31,29 @@ namespace P_Bulle_Docker.Pages
             this.databaseName = databaseName;
             this.databaseUsername = databaseUsername;
             this.databasePassword = databasePassword;
-            connectionString = "Server=172.17.0.2;Port=3306;Database=db_bulle_docker;user=root;Password=root;";
+            connectionString = "Server=172.17.0.3;Port=3306;Database=db_bulle_docker;user=root;Password=root;";
         }
-        public void ConnectionDatabase()
+        public string ConnectionDatabase()
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try
                 {
-                    Console.WriteLine("Connection to the database...");
                     connection.Open();
-                    Console.WriteLine("Connected to the database.");
+                    return "Connected to the database.";
                 }
                 catch (MySqlException ex)
                 {
-                    Console.WriteLine("Erreur lors de la connexion à la base de données : " + ex);
+                    return "Erreur lors de la connexion à la base de données : " + ex;
                 }
+            }
+        }
+
+        public void InsertScore()
+        {
+            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "";
             }
         }
     }
