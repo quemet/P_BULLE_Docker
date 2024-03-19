@@ -32,7 +32,7 @@ Container utilisé
 * `docker images` -> **Permet de check si l'image a bien été ajouté**  
 * `docker run --name mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_DATABASE=mysqldatabaser -p 3306:3306 -d mysql` -> **crée le conteneur docker**   
 * `docker ps` -> **Permet de check que le conteneur a bien été crée**
-* `docker exec -i mysql mysql -uroot -proot` -> **Permet de se connecter**
+* `docker exec -i mysql mysql -uroot -proot` -> **Permet de se connecter**  
 **Source : [create a MySQL Container](https://www.devgi.com/2018/11/install-mysql-docker-windows.html)**  
 # 2. Container APS.NET
 * Avant de commencer vérifier que APS.NET a bien été téléchaargé sinon Visual Studio Installer -> Visual Studio 2022 -> Modifier -> APS.NET -> Installer
