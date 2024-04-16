@@ -134,31 +134,56 @@ ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
 
 ### Docker Compose
 ```YML
-# Defini les services pour les containeurs
+# Défini les services
 services:
-  # Défini les information pour la base de donné
+  # Défini un service de base de données
   db:
-    # Définir le nom du containeur
-    container_name: mysql
-    # On choisi l'image pour ce containeur
+    # Défini l'image du containeur
     image: mysql
-    # On définit les variables d'environment
-    environment:
-      # On définit Le Mot de passe du compte root
-      - MYSQL_ROOT_PASSWORD=root
-      # On définit que c'est une base de données
-      - MYSQL_DATABASE=mysqldatabaser
+    # Défini le nom du containeur
+    container_name: mysql
+    # Défini les port interne
     ports:
-      # Définire les port du containers sur le sytème hôtes
       - '3306:3306'
+    # Défini les port à exposer
     expose:
-      # Définire les port exposés aux autres systèmes
       - 3306
+    # Défini certaine variable d'environment
+    environment:
+      - ENV MYSQL_ROOT_PASSWORD=root
+      - ENV MYSQL_DATABASE=mysqldatabaser
+    # Défini un volume
     volumes:
-      # Permet de spécifier un lien entre la machine hôte et le containeur
       - my-db:/var/lib/mysql
+  # Défini un service d'une application web
+  webapp:
+    # Build un image avec un dockerfile
+    build: 
+      # Choisi le dossier
+      context: .
+      # Le nom du dockerfile
+      dockerfile: Dockerfile
+    # Défini le nom du containeur
+    container_name: application
+    # Défini les dépendances
+    depends_on:
+      - db
+  # Défini un service de test unitaires
+  test:
+    # Build une image avec un dockerfile
+    build:
+      # Choisi le dossier
+      context: ../TestUnitaire/test
+      # Le nom du fichier
+      dockerfile: Dockerfile
+    # Choisi le nom du containeur
+    container_name: test
+    # Défini les service dépendant
+    depends_on:
+      - db
+      - webapp
+# Défini les volumes des services
 volumes:
-  # On liste les volumes
   my-db:
 ```
 

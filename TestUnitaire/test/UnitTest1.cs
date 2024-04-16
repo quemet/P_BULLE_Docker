@@ -6,7 +6,7 @@ namespace test
         [TestMethod]
         public void TestMethod1()
         {
-            
+            Assert.AreEqual(OperatingSystem.IsWindows(), true);
         }
     }
 }

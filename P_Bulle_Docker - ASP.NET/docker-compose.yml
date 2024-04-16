@@ -1,24 +1,31 @@
 services:
   db:
-    container_name: mysql
     image: mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=mysqldatabaser
+    container_name: mysql
     ports:
       - '3306:3306'
     expose:
       - 3306
+    environment:
+      - ENV MYSQL_ROOT_PASSWORD=root
+      - ENV MYSQL_DATABASE=mysqldatabaser
     volumes:
       - my-db:/var/lib/mysql
   webapp:
-    container_name: aspnet
-    image: mcr.microsoft.com/dotnet/samples:aspnetapp
-    ports:
-      - '8082'
-      - '4430'
-    volumes:
-      - ~/.aspnet/https:/https:ro
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: application
+    depends_on:
+      - db
+  test:
+    build:
+      context: ../TestUnitaire/test
+      dockerfile: Dockerfile
+    container_name: test
+    depends_on:
+      - db
+      - webapp
 volumes:
   my-db:
   
