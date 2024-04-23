@@ -29,162 +29,266 @@ Voila votre environment de développement à été contenerisée. Vous pouvez l'
 
 ### Commande pour lancer notre application
 
-```shell
-# Permet d'ouvrir une session root temporaire
-sudo -i
+[env.sh](env.sh)
 
-# Elle permet de Rechercher les mises à jour disponibles, télécharger et installer les mises à jour.
-apt-get upgrade
+```bash
+# Crée un tableaux des containeurs à supprimmer
+containers=('application' 'mysql' 'test')
 
-# Permet d'installer le programme sudo
-apt-get install sudo
+# Crée un tableaux des images à supprimmer
+images=('p_bulle_docker-aspnet-db' 'p_bulle_docker-aspnet-test' 'p_bulle_docker-aspnet-webapp')
 
-# Permet de mettre à jour les paquets disponibles
-sudo apt update
+# Ecris dans la console une ligne vide
+echo ""
 
-# Permet d'installer les outils nécessaires pour télécharger des fichiers depuis Internet.
-sudo apt install -y wget apt-transport-https software-properties-commo
+# Ecris dans la console le message Supprimmer les conteneurs
+echo "Supprimer les conteneurs..."
 
-# Permet de téléchargez les fichiers à partire de l'url et -O permet de spécifier le nom des fichiers de sorties.
-wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+# Ecris dans la console une ligne vide
+echo ""
 
-# Permet d' installer le package dans le système
-sudo dpkg -i packages-microsoft-prod.deb
+# Initilise une variable count à la valeur 1
+count=1
 
-# Permet de mettre à jour les paquets disponibles
-sudo apt update
+# Boucle sur le tableaux des containers 
+for container in "${containers[@]}"; do
+    # Ecris dans la console une ligne vide
+    echo ""
 
-# Permet d'installer le package ASP-NET runtime avec la version 6.0
-sudo apt install -y aspnetcore-runtime-6.0
+    # Ecris dans la consonsole à quelle étape du processus nous sommes
+    echo "[Step $count/6] En train de supprimer le conteneur $container..."
+    
+    # Supprimme le containeur de docker
+    docker rm $container
 
-# Permet de mettre à jour les paquets disponibles
-sudo apt update
+    # Ecris dans la console le containeur supprimmé
+    echo "Conteneur $container a été supprimé"
 
-# Permet d'installer le package .NET-SDK avec la version6.0
-sudo apt install -y dotnet-sdk-6.0
+    # Ecris dans la console une ligne vide
+    echo ""
 
-# Permet de reculer d'un dossier pour ce mettre à la racine
-cd ..
+    # Fait une barre de progression suivant l'avancer de la tâche
+    if [[ $count -eq 1 ]]
+    then
+        # Ecris dans la console la progression avec la barre et un chiffre
+        echo "Progression : [###               ] 16 %"
+    elif [[ $count -eq 2 ]]
+    then
+        # Ecris dans la console la progression avec la barre et un chiffre
+        echo "Progression : [######            ] 32 %"
+    else
+        # Ecris dans la console la progression avec la barre et un chiffre
+        echo "Progression : [#########         ] 48 %"
+    # Signifie la fin des conditions if...else if...else...
+    fi
+    # Incrémente de 1 la valeur de count
+    ((count++))
+# Signifie la fin de la boucle for
+done
 
-# Entre dans le dossier bin
-cd bin
+# Boucle sur le tableaux avec les images
+for image in "${images[@]}"; do
+    # Ecris dans la console une ligne vide
+    echo ""
 
-# Entre dans le dossier Debug
-cd Debug
+    # Ecris dans la consonsole à quelle étape du processus nous sommes
+    echo "[Step $count/6] En train de supprimer l'image $image..."
 
-# Entre dans le dossier net6.0
-cd net6.0
+    # Supprimme l' image de docker
+    docker rmi $image
 
-# Lance l'application .NET CORE
-dotnet P_Bulle_Docker.dll
+    # Ecris dans la console l'image supprimmé
+    echo "Image $image a été supprimée"
+
+    # Ecris dans la console une ligne vide
+    echo ""
+
+    # Fait une barre de progression suivant l'avancer de la tâche
+    if [[ $count -eq 4 ]]
+    then
+
+        # Ecris dans la console la progression avec la barre et un chiffre
+        echo "Progression : [############      ] 64 %"
+    elif [[ $count -eq 5 ]]
+    then
+        # Ecris dans la console la progression avec la barre et un chiffre
+        echo "Progression : [###############   ] 80 %"
+    else
+        # Ecris dans la console la progression avec la barre et un chiffre
+        echo "Progression : [##################] 100 %"
+    # Signifie la fin des conditions if...else if...else...
+    fi
+    # Incrémente de 1 la valeur de count
+    ((count++))
+# Signifie la fin de la boucle for
+done
+
+# Ecris dans la console une ligne vide
+echo ""
+
+# Confirme à l'utilisateur que les containeurs et images ont été supprimmé
+echo "Tous les conteneurs et images ont été supprimés."
+
+# Ecris dans la console un espace vide
+echo ""
+
+# Signale à l'utilisateur que le docker-compose va être effectué
+echo "Démarrage des services avec docker-compose..."
+
+# Permet de démmarer l'application, la base de données et les tests
+docker-compose up
+
 ```
 
 ### DockerFile
 
+J'ai fait trois Dockerfile
+* Pour la base de données
+* Pour mon application web
+* Pour mes test (MS Test)
+
+Voici le dockerfile pour mon base de données MySQL :
+
+[Dockerfile pour MySQL](../Database/Dockerfile)
+
 ```dockerfile
-# Il utilise l'image de base mcr.microsoft.com/dotnet/aspnet:6.0, qui contient l'environnement d'exécution ASP.NET Core.
+# Prend l'image de base de MySQL
+FROM mysql
+
+# Défini le mote de passe de root
+ENV MYSQL_ROOT_PASSWORD=root
+
+# Copie le dump dans le dossier /docker-entrypoint-initdb.d
+COPY P_Bulle-Docker.sql /docker-entrypoint-initdb.d/
+
+# Expose le port 3306
+EXPOSE 3306
+```
+
+Voici le dockerfile pour mon application web :
+
+[Dockerfile pour mon application Web](Dockerfile)
+
+```dockerfile
+# Cet image est utilisé comme base pour éxecuter des application ASP.NET CORE
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 
-# Définit le répertoire de travail comme /app.
+# Défini le dossier de travaille à /app
 WORKDIR /app
 
-# Expose les ports 80 et 443 qui sont généralement utilisés pour le trafic HTTP et HTTPS.
+# Expose le port 80 en HTTP
 EXPOSE 80
+
+# Expose le port 443 en HTTPS
 EXPOSE 443
 
-# Utilise l'image mcr.microsoft.com/dotnet/sdk:6.0 en tant que base, qui contient l'environnement de développement .NET Core.
+# Prend l'image de sdk pour compiler l'application
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
-# Définit le répertoire de travail comme /src.
+# Défini le dossier de travail à /src
 WORKDIR /src
 
-# Copie le fichier de projet P_Bulle_Docker.csproj dans le répertoire de travail.
+# Copie le fichier .csproj
 COPY ["P_Bulle_Docker.csproj", "."]
 
-# Exécute la commande dotnet restore pour restaurer les dépendances du projet.
+# Execute cette commande pour restaurer les dépendances
 RUN dotnet restore "./P_Bulle_Docker.csproj"
 
-# Copie tout le contenu du répertoire actuel dans le répertoire de travail.
+# Copie tout les fichiers dans le répertoire sur la machine dans le containeur
 COPY . .
 
-# Modifie le répertoire de travail vers /src/.
+# Défini l'endroit ou seront copié les fichiers
 WORKDIR "/src/."
 
-# Exécute la commande dotnet build pour construire l'application en mode Release et la place dans le répertoire /app/build.
+# Execute dotnet build pour faire une release dans le dossier /app/build
 RUN dotnet build "P_Bulle_Docker.csproj" -c Release -o /app/build
 
-# Utilise l'étape de construction comme base.
+# Défini une nouvelle étape depuis la précedente
 FROM build AS publish
 
-# Exécute la commande dotnet publish pour créer une version publiée de l'application dans le répertoire /app/publish.
+# Execute dotnet publish pour publier l'application et mettre dans le dossier
 RUN dotnet publish "P_Bulle_Docker.csproj" -c Release -o /app/publish
 
-# Utilise l'étape de base comme base.
+# Défini une nouvelle étape depuis la précedante
 FROM base AS final
 
-# Définit le répertoire de travail comme /app.
+# Change le répertoire de travail à /app
 WORKDIR /app
 
-# Copie le contenu du répertoire de publication depuis l'étape précédente.
+# copie les fichiers depuis le step précedente dans le repo actuelle
 COPY --from=publish /app/publish .
 
-# Définit le point d'entrée de l'image Docker avec la commande pour exécuter l'application ASP.NET Core.
+# Défini une commande qui sera effecué au moment du lancement du containeur
 ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
 ```
 
+Voici le dockerfile pour mes test avec MSTest :
+
+[Dockerfile pour MSTest](../TestUnitaire/test/Dockerfile)
+
+```dockerfile
+# Prend l'image de sdk pour compiler l'application
+FROM mcr.microsoft.com/dotnet/sdk:6.0
+
+# Défini le dossier de travail à /app
+WORKDIR /app
+
+# Copie le fichier .csproj dans le dossier courant
+COPY *.csproj ./
+
+# Restore les dépendances
+RUN dotnet restore
+
+# Copie tout les fichiers du local au containeur
+COPY . ./
+
+# Publie et mets la dans le dossier out
+RUN dotnet publish -c Release -o out
+
+# Au moment de l'éxecution du containeur éxecute dotnet test
+ENTRYPOINT [ "dotnet", "test" ]
+```
+
 ### Docker Compose
+
+Voici mon docker-compose pour créer mes 3 containeurs :
+
+[Docker compose](docker-compose.yml)
+
 ```YML
-# Défini les services
+
+# Défini les différents services
 services:
-  # Défini un service de base de données
+  # Défini un service de db
   db:
-    # Défini l'image du containeur
-    image: mysql
-    # Défini le nom du containeur
+    build:
+      context: ../Database
+      dockerfile: Dockerfile
     container_name: mysql
-    # Défini les port interne
     ports:
       - '3306:3306'
-    # Défini les port à exposer
-    expose:
-      - 3306
-    # Défini certaine variable d'environment
-    environment:
-      - ENV MYSQL_ROOT_PASSWORD=root
-      - ENV MYSQL_DATABASE=mysqldatabaser
-    # Défini un volume
     volumes:
       - my-db:/var/lib/mysql
-  # Défini un service d'une application web
   webapp:
-    # Build un image avec un dockerfile
     build: 
-      # Choisi le dossier
       context: .
-      # Le nom du dockerfile
       dockerfile: Dockerfile
-    # Défini le nom du containeur
     container_name: application
-    # Défini les dépendances
     depends_on:
       - db
-  # Défini un service de test unitaires
+    ports:
+      - "8080:80"
   test:
-    # Build une image avec un dockerfile
     build:
-      # Choisi le dossier
       context: ../TestUnitaire/test
-      # Le nom du fichier
       dockerfile: Dockerfile
-    # Choisi le nom du containeur
     container_name: test
-    # Défini les service dépendant
     depends_on:
       - db
       - webapp
-# Défini les volumes des services
 volumes:
   my-db:
+  
 ```
 
 ## Webographie

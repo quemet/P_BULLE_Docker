@@ -31,7 +31,7 @@ namespace P_Bulle_Docker.Pages
             this.databaseName = databaseName;
             this.databaseUsername = databaseUsername;
             this.databasePassword = databasePassword;
-            connectionString = "Server=172.17.0.3;Port=3306;Database=db_bulle_docker;user=root;Password=root;";
+            connectionString = "Server=172.23.0.2;Port=3306;Database=db_bulle_docker;user=root;Password=root;";
         }
         public string ConnectionDatabase()
         {
