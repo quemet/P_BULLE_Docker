@@ -31,7 +31,7 @@ namespace P_Bulle_Docker.Pages
             this.databaseName = databaseName;
             this.databaseUsername = databaseUsername;
             this.databasePassword = databasePassword;
-            connectionString = "Server=172.23.0.2;Port=3306;Database=db_bulle_docker;user=root;Password=root;";
+            connectionString = $"Server={this.serverIp};Port={this.serverPort};Database={this.databaseName};user={this.databaseUsername};Password={this.databasePassword};";
         }
         public string ConnectionDatabase()
         {
@@ -53,7 +53,14 @@ namespace P_Bulle_Docker.Pages
         {
             using(MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "";
+                using(MySqlCommand command = new MySqlCommand())
+                {
+                    command.CommandText = "INSERT INTO t_player(username, colorSkin, skin) VALUES (@username, @colorskin, @skin)";
+                    command.Parameters.AddWithValue("@username", "root");
+                    command.Parameters.AddWithValue("@colorskin", "yellow");
+                    command.Parameters.AddWithValue("@skin", "");
+                    command.ExecuteNonQuery();
+                }
             }
         }
     }
