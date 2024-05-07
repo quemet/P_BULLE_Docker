@@ -2,150 +2,80 @@
 
 ## Config de docker et des containeurs
 
-### Creation du containeur avec DevEnvironments
+### Création des containeurs
 
-Quand vous lancer Docker, vous devez cliquer sur l'icône DevEnvironments à Gauche
+[Script pour lancer les containeurs et l'application](setup.bat)
 
-Cliquer sur le bouton Create new environment  
-![Image du Screen N°1](../Image/Documentation/Screen_01.png)  
+```bat
+echo off
+setlocal
 
-Cette Fenêtre vous informe juste de Docker Dev Environment. Cliquer sur Get Started  
-![Image du Screen N°2](../Image/Documentation/Screen_02.png)
+REM Définir le nom du projet
+set "PROJECT_NAME=myprojectdocker"
 
-Vous arrive sur cetee fenêtre. Vous pouvez utiliser sois un projet GIT ou un dossier local. Dans cet documentation je vais utilisé un dossier local.
-![Image du Screen N°3](../Image/Documentation/Screen_03.png)
+REM Vérifier l'existence de fichiers .csproj dans le répertoire du projet
+if not exist "*.csproj" (
+    echo Aucun fichier .csproj trouvé dans ce répertoire.
+    exit /b
+)
 
-Vous chochez votre option. Dans le cas d'un dossier local, il faudra choisir un dossier avec le button Select en bas à droite
-![Image du Screen N°4](../Image/Documentation/Screen_04.png)
+REM Trouver le premier fichier .csproj dans le répertoire
+for /F "delims=" %%I in ('dir *.csproj /b /a-d') do (
+    set "CSPROJ_NAME=%%I"
+    goto find_exe
+)
 
-Après votre dossier choisi. Cliquer sur Continue qui vient d'apparaître.
-![Image du Screen N°5](../Image/Documentation/Screen_05.png)
+:find_exe
+REM Vérifier l'existence du dossier de sortie pour les fichiers .exe
+if not exist "bin\Debug\net6.0\*.exe" (
+    echo Aucun fichier .exe trouvé dans bin\Debug\net7.0\. Assurez-vous de compiler le projet.
+    exit /b
+)
 
-Vous n'avez à présent plus rien à faire attendez que le téléchargement finisse et cliquer sur continuer.
-![Image du Screen N°6](../Image/Documentation/Screen_06.png)
+REM Trouver le premier fichier .exe dans le répertoire de sortie
+for /F "delims=" %%I in ('dir bin\Debug\net6.0\*.exe /b /a-d') do (
+    set "EXE_NAME=%%~nI"
+)
 
-Voila votre environment de développement à été contenerisée. Vous pouvez l'ouvrir avec votre IDE.
-![Image du Screen N°7](../Image/Documentation/Screen_07.png)
+REM Démarrer uniquement les services nécessaires à la base de données et aux tests
+docker-compose -p %PROJECT_NAME% up -d
 
-### Commande pour lancer notre application
+set CONTAINER_NAME=%PROJECT_NAME%-dev-1
+REM Exécute le conteneur et génère le code hexadécimal du nom du conteneur
+docker run --rm geircode/string_to_hex bash string_to_hex.bash "%CONTAINER_NAME%" > vscode_remote_hex.txt
 
-[env.sh](env.sh)
 
-```bash
-# Crée un tableaux des containeurs à supprimmer
-containers=('application' 'mysql' 'test')
+REM Lit le contenu hexadécimal dans une variable
+set /p VSCODE_REMOTE_HEX=<vscode_remote_hex.txt
 
-# Crée un tableaux des images à supprimmer
-images=('p_bulle_docker-aspnet-db' 'p_bulle_docker-aspnet-test' 'p_bulle_docker-aspnet-webapp')
+REM Ouvre VS Code avec l'URI du conteneur
+for /f "delims=" %%i in ('docker inspect -f "{{.NetworkSettings.Networks.myprojectdocker_default.IPAddress}}" myprojectdocker-db-1') do set DB_IP=%%i
 
-# Ecris dans la console une ligne vide
-echo ""
+echo IP de la DB: %DB_IP%
 
-# Ecris dans la console le message Supprimmer les conteneurs
-echo "Supprimer les conteneurs..."
 
-# Ecris dans la console une ligne vide
-echo ""
+start http://localhost:5025/
 
-# Initilise une variable count à la valeur 1
-count=1
 
-# Boucle sur le tableaux des containers 
-for container in "${containers[@]}"; do
-    # Ecris dans la console une ligne vide
-    echo ""
+code --folder-uri=vscode-remote://attached-container+%VSCODE_REMOTE_HEX%/app
 
-    # Ecris dans la consonsole à quelle étape du processus nous sommes
-    echo "[Step $count/6] En train de supprimer le conteneur $container..."
-    
-    # Supprimme le containeur de docker
-    docker rm $container
 
-    # Ecris dans la console le containeur supprimmé
-    echo "Conteneur $container a été supprimé"
+REM Nettoie le fichier temporaire
+del vscode_remote_hex.txt
 
-    # Ecris dans la console une ligne vide
-    echo ""
 
-    # Fait une barre de progression suivant l'avancer de la tâche
-    if [[ $count -eq 1 ]]
-    then
-        # Ecris dans la console la progression avec la barre et un chiffre
-        echo "Progression : [###               ] 16 %"
-    elif [[ $count -eq 2 ]]
-    then
-        # Ecris dans la console la progression avec la barre et un chiffre
-        echo "Progression : [######            ] 32 %"
-    else
-        # Ecris dans la console la progression avec la barre et un chiffre
-        echo "Progression : [#########         ] 48 %"
-    # Signifie la fin des conditions if...else if...else...
-    fi
-    # Incrémente de 1 la valeur de count
-    ((count++))
-# Signifie la fin de la boucle for
-done
+pause
 
-# Boucle sur le tableaux avec les images
-for image in "${images[@]}"; do
-    # Ecris dans la console une ligne vide
-    echo ""
-
-    # Ecris dans la consonsole à quelle étape du processus nous sommes
-    echo "[Step $count/6] En train de supprimer l'image $image..."
-
-    # Supprimme l' image de docker
-    docker rmi $image
-
-    # Ecris dans la console l'image supprimmé
-    echo "Image $image a été supprimée"
-
-    # Ecris dans la console une ligne vide
-    echo ""
-
-    # Fait une barre de progression suivant l'avancer de la tâche
-    if [[ $count -eq 4 ]]
-    then
-
-        # Ecris dans la console la progression avec la barre et un chiffre
-        echo "Progression : [############      ] 64 %"
-    elif [[ $count -eq 5 ]]
-    then
-        # Ecris dans la console la progression avec la barre et un chiffre
-        echo "Progression : [###############   ] 80 %"
-    else
-        # Ecris dans la console la progression avec la barre et un chiffre
-        echo "Progression : [##################] 100 %"
-    # Signifie la fin des conditions if...else if...else...
-    fi
-    # Incrémente de 1 la valeur de count
-    ((count++))
-# Signifie la fin de la boucle for
-done
-
-# Ecris dans la console une ligne vide
-echo ""
-
-# Confirme à l'utilisateur que les containeurs et images ont été supprimmé
-echo "Tous les conteneurs et images ont été supprimés."
-
-# Ecris dans la console un espace vide
-echo ""
-
-# Signale à l'utilisateur que le docker-compose va être effectué
-echo "Démarrage des services avec docker-compose..."
-
-# Permet de démmarer l'application, la base de données et les tests
-docker-compose up
-
+endlocal
 ```
 
 ### DockerFile
 
 J'ai fait trois Dockerfile
-* Pour la base de données
-* Pour mon application web
-* Pour mes test (MS Test)
+
+- Pour la base de données
+- Pour mon application web
+- Pour mes test (MS Test)
 
 Voici le dockerfile pour mon base de données MySQL :
 
@@ -224,7 +154,7 @@ ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
 
 Voici le dockerfile pour mes test avec MSTest :
 
-[Dockerfile pour MSTest](../TestUnitaire/test/Dockerfile)
+[Dockerfile pour MSTest](../test/Dockerfile)
 
 ```dockerfile
 # Prend l'image de sdk pour compiler l'application
@@ -270,7 +200,7 @@ services:
     volumes:
       - my-db:/var/lib/mysql
   webapp:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: application
@@ -288,16 +218,5 @@ services:
       - webapp
 volumes:
   my-db:
-  
+
 ```
-
-## Webographie
-
-### Séquence 1
-### Séquence 2
-### Séquence 3
-### Séquence 4
-### Séquence 5
-### Séquence 6
-### Séquence 7
-### Séquence 8

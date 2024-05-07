@@ -1,20 +1,17 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["P_Bulle_Docker.csproj", "."]
-RUN dotnet restore "./P_Bulle_Docker.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "P_Bulle_Docker.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "P_Bulle_Docker.csproj" -c Release -o /app/publish
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY ./P_Bulle_Docker.csproj ./
+RUN dotnet restore ./P_Bulle_Docker.csproj
+COPY . .
+RUN dotnet publish ./P_Bulle_Docker.csproj -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS development
+WORKDIR /app
+COPY --from=build /app/out .
+ENTRYPOINT ["dotnet", "watch", "--project", "P_Bulle_Docker.csproj"]
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS production
+WORKDIR /app
+COPY --from=build /app/out .
+EXPOSE 80
 ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]

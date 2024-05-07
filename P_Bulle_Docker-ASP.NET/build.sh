@@ -13,8 +13,8 @@ for container in "${containers[@]}"
 do
     echo ""
     echo "[Step $count/$total_step] En train de supprimer le conteneur $container..."
-    docker stop $container
-    docker rm $container
+    sudo docker stop $container
+    sudo docker rm $container
     echo "Conteneur $container a été supprimé"
     echo ""
     ((count++))
@@ -24,7 +24,7 @@ for image in "${images[@]}"
 do
     echo ""
     echo "[Step $count/$total_step] En train de supprimer l'image $image..."
-    docker rmi $image
+    sudo docker rmi $image
     echo "Image $image a été supprimée"
     echo ""
     ((count++))
@@ -45,6 +45,6 @@ sudo apt-get upgrade
 sudo apt-get install xpg-utils
 echo ""
 
-docker-compose up -d
+sudo docker-compose up -d
 
-xdg-open 'http://localhost:8080'
+# xdg-open 'http://localhost:8080'
