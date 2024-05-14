@@ -6,75 +6,80 @@ Il y a deux façons de faire des containeurs :
 
 * ### Création avec le devContaineurs de Docker
   En suivant les étapes suivantes :
-  ![Etape n°1]()
+  ![Etape n°1](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_01.png)
+  On clique sur le bouton de départ "Create new environment"
+  ![Etape n°2](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_02.png)  
+  On clique à nouveau sur le bouton "Get Started"
+  ![Etape n°3](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_03.png)
+  Sur cette fenêtre on choisi si on veut un local ou avec git. j'ai choisi de le faire en local
+  ![Etape n°4](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_04.png)
+  ![Etape n°5](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_05.png)
+  ![Etape n°6](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_06.png)  
+  On attend que docker fasse sont travail.  
+  ![Etape n°7](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_07.png)  
+  C'est fini le containeur est crée. On peut l'ouvrir avec VS Code.
 * ### Création avec un script bat
 
-### Création des containeurs
+  [Script pour lancer les containeurs et l'application](setup.bat)
 
-[Script pour lancer les containeurs et l'application](setup.bat)
+  ```bat
+  echo off
+  setlocal
 
-```bat
-echo off
-setlocal
+  REM Définir le nom du projet
+  set "PROJECT_NAME=myprojectdocker"
 
-REM Définir le nom du projet
-set "PROJECT_NAME=myprojectdocker"
-
-REM Vérifier l'existence de fichiers .csproj dans le répertoire du projet
-if not exist "*.csproj" (
+  REM Vérifier l'existence de fichiers .csproj dans le répertoire du projet
+  if not exist "*.csproj" (
     echo Aucun fichier .csproj trouvé dans ce répertoire.
     exit /b
-)
+  )
 
-REM Trouver le premier fichier .csproj dans le répertoire
-for /F "delims=" %%I in ('dir *.csproj /b /a-d') do (
+  REM Trouver le premier fichier .csproj dans le répertoire
+  for /F "delims=" %%I in ('dir *.csproj /b /a-d') do (
     set "CSPROJ_NAME=%%I"
     goto find_exe
-)
+  )
 
-:find_exe
-REM Vérifier l'existence du dossier de sortie pour les fichiers .exe
-if not exist "bin\Debug\net6.0\*.exe" (
+  :find_exe
+  REM Vérifier l'existence du dossier de sortie pour les fichiers .exe
+  if not exist "bin\Debug\net6.0\*.exe" (
     echo Aucun fichier .exe trouvé dans bin\Debug\net7.0\. Assurez-vous de compiler le projet.
     exit /b
-)
+  )
 
-REM Trouver le premier fichier .exe dans le répertoire de sortie
-for /F "delims=" %%I in ('dir bin\Debug\net6.0\*.exe /b /a-d') do (
+  REM Trouver le premier fichier .exe dans le répertoire de sortie
+  for /F "delims=" %%I in ('dir bin\Debug\net6.0\*.exe /b /a-d') do (
     set "EXE_NAME=%%~nI"
-)
+  )
 
-REM Démarrer uniquement les services nécessaires à la base de données et aux tests
-docker-compose -p %PROJECT_NAME% up -d
+  REM Démarrer uniquement les services nécessaires à la base de données et aux tests
+  docker-compose -p %PROJECT_NAME% up -d
 
-set CONTAINER_NAME=%PROJECT_NAME%-dev-1
-REM Exécute le conteneur et génère le code hexadécimal du nom du conteneur
-docker run --rm geircode/string_to_hex bash string_to_hex.bash "%CONTAINER_NAME%" > vscode_remote_hex.txt
-
-
-REM Lit le contenu hexadécimal dans une variable
-set /p VSCODE_REMOTE_HEX=<vscode_remote_hex.txt
-
-REM Ouvre VS Code avec l'URI du conteneur
-for /f "delims=" %%i in ('docker inspect -f "{{.NetworkSettings.Networks.myprojectdocker_default.IPAddress}}" myprojectdocker-db-1') do set DB_IP=%%i
-
-echo IP de la DB: %DB_IP%
+  set CONTAINER_NAME=%PROJECT_NAME%-dev-1
+  REM Exécute le conteneur et génère le code hexadécimal du nom du conteneur
+  docker run --rm geircode/string_to_hex bash string_to_hex.bash "%CONTAINER_NAME%" > vscode_remote_hex.txt
 
 
-start http://localhost:5025/
+  REM Lit le contenu hexadécimal dans une variable
+  set /p VSCODE_REMOTE_HEX=<vscode_remote_hex.txt
 
+  REM Ouvre VS Code avec l'URI du conteneur
+  for /f "delims=" %%i in ('docker inspect -f "{{.NetworkSettings.Networks.myprojectdocker_default.IPAddress}}" myprojectdocker-db-1') do set DB_IP=%%i
 
-code --folder-uri=vscode-remote://attached-container+%VSCODE_REMOTE_HEX%/app
+  echo IP de la DB: %DB_IP%
 
+  start http://localhost:5025/
+  
+  code --folder-uri=vscode-remote://attached-container+%VSCODE_REMOTE_HEX%/app
+  
+  REM Nettoie le fichier temporaire
+  del vscode_remote_hex.txt
 
-REM Nettoie le fichier temporaire
-del vscode_remote_hex.txt
+  pause
 
-
-pause
-
-endlocal
-```
+  endlocal
+  ```
 
 ### DockerFile
 
