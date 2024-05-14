@@ -2,6 +2,13 @@
 
 ## Config de docker et des containeurs
 
+Il y a deux façons de faire des containeurs :
+
+* ### Création avec le devContaineurs de Docker
+  En suivant les étapes suivantes :
+  ![Etape n°1]()
+* ### Création avec un script bat
+
 ### Création des containeurs
 
 [Script pour lancer les containeurs et l'application](setup.bat)
