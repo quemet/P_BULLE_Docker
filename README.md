@@ -1,5 +1,6 @@
 # P_BULLE_Docker
-Application with the library .NET
+
+Application avec :NET
 ======
 ## 1. Résumé de l'application
 Mon application est une app en APS.NET qui est donc une application Web avec du HTML, CSS, JS et du C#.  
@@ -9,7 +10,7 @@ Vu le temps imposé c'est compliqué de finire mais le but est de dockeriser l'a
 Dans ce Readme le but est de présenter les conteneurs utilisé et présenter le dockerfile.
 Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotnet.microsoft.com/en-us/apps/aspnet)
 
-&nbsp;Languages, Framework and Tools 🛠
+&nbsp;Languages, Framework and Outils 🛠
 ------
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?&style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?&style=for-the-badge&logo=css3&logoColor=white)
@@ -19,6 +20,7 @@ Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotn
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
 
 ![Visual Studio](https://img.shields.io/badge/Visual%20Studio-5C2D91.svg?style=for-the-badge&logo=visual-studio&logoColor=white)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
@@ -33,7 +35,8 @@ Container utilisé
 * `docker run --name mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_DATABASE=mysqldatabaser -p 3306:3306 -d mysql` -> **crée le conteneur docker**   
 * `docker ps` -> **Permet de check que le conteneur a bien été crée**
 * `docker exec -i mysql mysql -uroot -proot` -> **Permet de se connecter**  
-**Source : [create a MySQL Container](https://www.devgi.com/2018/11/install-mysql-docker-windows.html)**  
+**Source : [create a MySQL Container](https://www.devgi.com/2018/11/install-mysql-docker-windows.html)**
+   
 # 2. Container APS.NET
 * Avant de commencer vérifier que APS.NET a bien été téléchaargé sinon Visual Studio Installer -> Visual Studio 2022 -> Modifier -> APS.NET -> Installer
 * Ouvrez Visual Studio et sélectionnez Nouveau projet.
@@ -46,55 +49,6 @@ Container utilisé
 * Une fenêtre apparait sur le certificat de développement si vous leur faites confiance cliquer sur Oui sinon sur Non
 * Après une fenêtre de navigateur va s'afficher avec votre application Web afficher.  
 **Source : [create a APS.NET Container](https://learn.microsoft.com/fr-fr/aspnet/core/tutorials/razor-pages/razor-pages-start?view=aspnetcore-8.0&tabs=visual-studio)**
-
-Dockerfile
-======
-```dockerfile
-# Il utilise l'image de base mcr.microsoft.com/dotnet/aspnet:6.0, qui contient l'environnement d'exécution ASP.NET Core.
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-
-# Définit le répertoire de travail comme /app.
-WORKDIR /app
-
-# Expose les ports 80 et 443 qui sont généralement utilisés pour le trafic HTTP et HTTPS.
-EXPOSE 80
-EXPOSE 443
-
-# Utilise l'image mcr.microsoft.com/dotnet/sdk:6.0 en tant que base, qui contient l'environnement de développement .NET Core.
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-
-# Définit le répertoire de travail comme /src.
-WORKDIR /src
-
-# Copie le fichier de projet P_Bulle_Docker.csproj dans le répertoire de travail.
-COPY ["P_Bulle_Docker.csproj", "."]
-
-# Exécute la commande dotnet restore pour restaurer les dépendances du projet.
-RUN dotnet restore "./P_Bulle_Docker.csproj"
-
-# Copie tout le contenu du répertoire actuel dans le répertoire de travail.
-COPY . .
-
-# Modifie le répertoire de travail vers /src/.
-WORKDIR "/src/."
-
-# Exécute la commande dotnet build pour construire l'application en mode Release et la place dans le répertoire /app/build.
-RUN dotnet build "P_Bulle_Docker.csproj" -c Release -o /app/build
-
-# Utilise l'étape de construction comme base.
-FROM build AS publish
-
-# Exécute la commande dotnet publish pour créer une version publiée de l'application dans le répertoire /app/publish.
-RUN dotnet publish "P_Bulle_Docker.csproj" -c Release -o /app/publish
-
-# Utilise l'étape de base comme base.
-FROM base AS final
-
-# Définit le répertoire de travail comme /app.
-WORKDIR /app
-
-# Copie le contenu du répertoire de publication depuis l'étape précédente.
-COPY --from=publish /app/publish .
 
 # Définit le point d'entrée de l'image Docker avec la commande pour exécuter l'application ASP.NET Core.
 ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
