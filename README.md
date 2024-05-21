@@ -48,15 +48,15 @@ Pour avoir plus d'information, veuillez consulter [la documentation](./P_Bulle_D
 
 ### 5. Explication des commande de base docker-compose
 
-version -> Permet de définir la version
-services -> Permet de définir les services à utiliser
-image -> Défini l'image de base
-environment -> Défini les variables d'environment
-ports -> Défin les différents ports
-volumes -> Défini des volumes
-build -> Permet de définir des options pour build sa propre image depuis le docker-compose
-  context -> Option de build permet de passer un chemin
-  dockerfile -> Option de build permet de passer le nom du Dockerfile
-  target -> Défin quelle étape du Dockerfile
-depends_on -> Service qui dépend d'autres services
-networks -> Spécifie le réseaux
+* version -> Permet de définir la version
+* services -> Permet de définir les services à utiliser
+* image -> Défini l'image de base
+* environment -> Défini les variables d'environment
+* ports -> Défin les différents ports
+* volumes -> Défini des volumes
+* build -> Permet de définir des options pour build sa propre image depuis le docker-compose
+  * context -> Option de build permet de passer un chemin
+  * dockerfile -> Option de build permet de passer le nom du Dockerfile
+  * target -> Défin quelle étape du Dockerfile
+* depends_on -> Service qui dépend d'autres services
+* networks -> Spécifie le réseaux
