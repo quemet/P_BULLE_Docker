@@ -1,4 +1,7 @@
+# On défini la version
 version: '3.8'
+
+# On va définir les différents services
 services:
   db:
     image: mysql
