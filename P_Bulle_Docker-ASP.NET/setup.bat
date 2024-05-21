@@ -22,46 +22,6 @@ for %%i in (%images%) do (
     docker rmi %%i
 )
 
-REM Création du fichier docker-compose.yml
-(
-echo version: '3.8'
-echo services:
-echo   db:
-echo     image: mysql
-echo     environment:
-echo       MYSQL_ROOT_PASSWORD: root
-echo       MYSQL_DATABASE: mydatabase
-echo     ports:
-echo       - '3306:3306'
-echo     volumes:
-echo       - db-data:/var/lib/mysql
-echo       - ../Database/P_Bulle-Docker.sql:/docker-entrypoint-initdb.d/P_Bulle-Docker.sql
-echo   dev:
-echo     build:
-echo       context: .
-echo       dockerfile: Dockerfile
-echo       target: development
-echo     ports:
-echo       - '9721:80'
-echo     volumes:
-echo       - .:/app
-echo     depends_on:
-echo       - db
-echo   test:
-echo     build:
-echo       context: ..
-echo       dockerfile: Dockerfile.test
-echo     depends_on:
-echo       - db
-echo     volumes:
-echo       - ../test:/app/test
-echo       - ./test_results:/app/test_results
-echo volumes:
-echo   db-data:
-echo networks:
-echo   default:
-) > docker-compose.yml
-
 REM Vérifier l'existence de fichiers .csproj
 if not exist "*.csproj" (
     echo Aucun fichier .csproj trouvé dans ce répertoire.
@@ -95,54 +55,6 @@ for /F "delims=" %%I in ('dir bin\Debug\%DOTNET_VERSION%\*.exe /b /a-d') do (
     set "EXE_NAME=%%~nI"
     goto build_docker
 )
-echo Génération du Dockerfile avec .NET SDK version: 6.0
-
-:build_docker
-REM Générer le Dockerfile pour le conteneur de développement
-(
-echo # syntax=docker/dockerfile:1
-echo # Stage 1: Build the application
-echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-echo WORKDIR /app
-echo # Copy csproj and restore as distinct layers
-echo COPY ./P_Bulle_Docker.csproj ./
-echo RUN dotnet restore ./P_Bulle_Docker.csproj
-echo # Copy everything else and build
-echo COPY . .
-echo RUN dotnet publish ./P_Bulle_Docker.csproj -c Release -o out
-echo # Stage 2: Development environment
-echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS development
-echo WORKDIR /app
-echo COPY --from=build /app/out .
-echo ENTRYPOINT ["dotnet", "watch", "--project", "P_Bulle_Docker.csproj"]
-echo # Stage 3: Production environment
-echo FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS production
-echo WORKDIR /app
-echo COPY --from=build /app/out .
-echo EXPOSE 80
-echo RUN dotnet dev-certs https
-echo ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
-) > Dockerfile
-
-REM Générer le Dockerfile pour le conteneur de test
-(
-echo # syntax=docker/dockerfile:1
-echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-echo WORKDIR /app
-echo # Copier les dossiers de l'application et des tests
-echo COPY P_Bulle_Docker-ASP.NET/ ./P_Bulle_Docker-ASP.NET/
-echo COPY test/ ./test/
-echo # Restaurer et construire l'application
-echo RUN dotnet restore P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj
-echo RUN dotnet build P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj -c Release
-echo # Restaurer et construire les tests
-echo RUN dotnet restore test/test.csproj
-echo RUN dotnet build test/test.csproj -c Release
-echo # Définir le répertoire de travail pour les tests
-echo WORKDIR /app/test
-echo # Définir la commande pour exécuter les tests et enregistrer les résultats
-echo CMD ["dotnet", "test", "test.csproj", "--logger", "trx;LogFileName=test_results.trx", "--results-directory", "/app/test_results"]
-) > ../Dockerfile.test
 
 REM Démarrer les services
 docker-compose -p %PROJECT_NAME% up -d
