@@ -3,37 +3,59 @@ version: '3.8'
 
 # On va définir les différents services
 services:
+
+  # On défini un service de base de données
   db:
+    # On défini l'image comme mysql
     image: mysql
+    # On défini des variables d'environment
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mydatabase
+    # On défini les ports pour la base de données
     ports:
       - '3306:3306'
+    # On défini des volumes
     volumes:
       - db-data:/var/lib/mysql
       - ../Database/P_Bulle-Docker.sql:/docker-entrypoint-initdb.d/P_Bulle-Docker.sql
+  # On défini un service de developement
   dev:
+    # On défini l'image du container
     build:
+      # On défini le dossier ou est stocké le dockerfile
       context: .
+      # On défini le nom du Dockerfile
       dockerfile: Dockerfile
+      # On défini quel stage on choisi
       target: development
+    # On défini les ports
     ports:
       - '9721:80'
+    # On défini des volumes
     volumes:
       - .:/app
+    # On défini les dépendeances pour ce container
     depends_on:
       - db
+  # On défini un service de test
   test:
+    # On défini l'image du container
     build:
+      # On défini le répertoire ou est le Dockerfile
       context: ..
+      # On défini le nom du Dockerfile
       dockerfile: Dockerfile.test
+    # On défini les dépendances
     depends_on:
       - db
+    # On défini des volumes pour le service
     volumes:
       - ../test:/app/test
       - ./test_results:/app/test_results
+# On défini les volumes
 volumes:
   db-data:
+# On défini les réseaux
 networks:
   default:
