@@ -1,9 +1,14 @@
 # On utilise le sdk avec net 6.0
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /appsproj
+# On défini le dossier de travail à /app
+WORKDIR /app
+# On copie le csproj dans le dossier actuel
 COPY ./P_Bulle_Docker.csproj ./
+# On restore les librairies avec le csproj
 RUN dotnet restore ./P_Bulle_Docker.csproj
+# On copie le reste
 COPY . .
+# On publish
 RUN dotnet publish ./P_Bulle_Docker.csproj -c Release -o out
 # On utilise le sdk avec net6.0
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS development
