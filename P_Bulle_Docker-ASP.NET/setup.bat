@@ -10,14 +10,19 @@ if not exist "test_results" (
     mkdir test_results
 )
 
+REM Défini un tableau avec les containers
 set "containers=myprojectdocker-db-1,myprojectdocker-dev-1,myprojectdocker-test-1"
+
+REM Défini un tableau avec les images
 set "images=geircode/string_to_hex,myprojectdocker_dev,myprojectdocker_test,mysql"
 
+REM Boucle sur le tableau des containers et stoppe et supprimme le container
 for %%c in (%containers%) do (
     docker stop %%c
     docker rm %%c
 )
 
+REM Boucle sur le tableau des images et supprimme l'image
 for %%i in (%images%) do (
     docker rmi %%i
 )
@@ -59,7 +64,9 @@ for /F "delims=" %%I in ('dir bin\Debug\%DOTNET_VERSION%\*.exe /b /a-d') do (
 REM Démarrer les services
 docker-compose -p %PROJECT_NAME% up -d
 
+REM Défini le nom du containeur
 set CONTAINER_NAME=%PROJECT_NAME%-dev-1
+
 REM générer le code hexadécimal du conteneur
 docker run --rm geircode/string_to_hex bash string_to_hex.bash "%CONTAINER_NAME%" > vscode_remote_hex.txt
 
@@ -69,8 +76,10 @@ set /p VSCODE_REMOTE_HEX=<vscode_remote_hex.txt
 REM Ouvrir VS Code avec l'URI du conteneur
 for /f "delims=" %%i in ('docker inspect -f "{{.NetworkSettings.Networks.%PROJECT_NAME%_default.IPAddress}}" %PROJECT_NAME%-db-1') do set DB_IP=%%i
 
+REM Afficher l'IP de la DB
 echo IP de la DB: %DB_IP%
 
+REM Ouvre VSCode
 code --folder-uri=vscode-remote://attached-container+%VSCODE_REMOTE_HEX%/app
 
 REM Nettoyer le fichier temporaire
