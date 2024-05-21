@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /app
+# Copier les dossiers de l'application et des tests
+COPY P_Bulle_Docker-ASP.NET/ ./P_Bulle_Docker-ASP.NET/
+COPY test/ ./test/
+# Restaurer et construire l'application
+RUN dotnet restore P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj
+RUN dotnet build P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj -c Release
+# Restaurer et construire les tests
+RUN dotnet restore test/test.csproj
+RUN dotnet build test/test.csproj -c Release
+# Définir le répertoire de travail pour les tests
+WORKDIR /app/test
+# Définir la commande pour exécuter les tests et enregistrer les résultats
+CMD ["dotnet", "test", "test.csproj", "--logger", "trx;LogFileName=test_results.trx", "--results-directory", "/app/test_results"]

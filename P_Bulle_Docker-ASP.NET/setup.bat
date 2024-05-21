@@ -10,12 +10,24 @@ if not exist "test_results" (
     mkdir test_results
 )
 
+set "containers=myprojectdocker-db-1,myprojectdocker-dev-1,myprojectdocker-test-1"
+set "images=geircode/string_to_hex,myprojectdocker_dev,myprojectdocker_test,mysql"
+
+for %%c in (%containers%) do (
+    docker stop %%c
+    docker rm %%c
+)
+
+for %%i in (%images%) do (
+    docker rmi %%i
+)
+
 REM Création du fichier docker-compose.yaml
 (
 echo version: '3.8'
 echo services:
 echo   db:
-echo     image: mysql:latest
+echo     image: mysql
 echo     environment:
 echo       MYSQL_ROOT_PASSWORD: root
 echo       MYSQL_DATABASE: mydatabase
@@ -23,14 +35,14 @@ echo     ports:
 echo       - '3306:3306'
 echo     volumes:
 echo       - db-data:/var/lib/mysql
+echo       - ../Database/P_Bulle-Docker.sql:/docker-entrypoint-initdb.d/P_Bulle-Docker.sql
 echo   dev:
 echo     build:
 echo       context: .
 echo       dockerfile: Dockerfile
 echo       target: development
 echo     ports:
-echo       - '9721:80'  
-echo       - '443:443'
+echo       - '9721:80'
 echo     volumes:
 echo       - .:/app
 echo     depends_on:
@@ -90,38 +102,39 @@ REM Générer le Dockerfile pour le conteneur de développement
 (
 echo # syntax=docker/dockerfile:1
 echo # Stage 1: Build the application
-echo FROM mcr.microsoft.com/dotnet/sdk:%DOTNET_SDK_VERSION% AS build
+echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 echo WORKDIR /app
 echo # Copy csproj and restore as distinct layers
-echo COPY ./%CSPROJ_NAME% ./
-echo RUN dotnet restore ./%CSPROJ_NAME%
+echo COPY ./P_Bulle_Docker.csproj ./
+echo RUN dotnet restore ./P_Bulle_Docker.csproj
 echo # Copy everything else and build
 echo COPY . .
-echo RUN dotnet publish ./%CSPROJ_NAME% -c Release -o out
+echo RUN dotnet publish ./P_Bulle_Docker.csproj -c Release -o out
 echo # Stage 2: Development environment
-echo FROM mcr.microsoft.com/dotnet/sdk:%DOTNET_SDK_VERSION% AS development
+echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS development
 echo WORKDIR /app
 echo COPY --from=build /app/out .
-echo ENTRYPOINT ["dotnet", "watch", "--project", "%CSPROJ_NAME%"]
+echo ENTRYPOINT ["dotnet", "watch", "--project", "P_Bulle_Docker.csproj"]
 echo # Stage 3: Production environment
-echo FROM mcr.microsoft.com/dotnet/aspnet:%DOTNET_SDK_VERSION% AS production
+echo FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS production
 echo WORKDIR /app
 echo COPY --from=build /app/out .
 echo EXPOSE 80
-echo ENTRYPOINT ["dotnet", "%EXE_NAME%.dll"]
+echo RUN dotnet dev-certs https
+echo ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
 ) > Dockerfile
 
 REM Générer le Dockerfile pour le conteneur de test
 (
 echo # syntax=docker/dockerfile:1
-echo FROM mcr.microsoft.com/dotnet/sdk:%DOTNET_SDK_VERSION% AS build
+echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 echo WORKDIR /app
 echo # Copier les dossiers de l'application et des tests
-echo COPY %EXE_NAME%/ ./%EXE_NAME%/
+echo COPY P_Bulle_Docker-ASP.NET/ ./P_Bulle_Docker-ASP.NET/
 echo COPY test/ ./test/
 echo # Restaurer et construire l'application
-echo RUN dotnet restore %EXE_NAME%/%EXE_NAME%.csproj
-echo RUN dotnet build %EXE_NAME%/%EXE_NAME%.csproj -c Release
+echo RUN dotnet restore P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj
+echo RUN dotnet build P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj -c Release
 echo # Restaurer et construire les tests
 echo RUN dotnet restore test/test.csproj
 echo RUN dotnet build test/test.csproj -c Release
@@ -145,8 +158,6 @@ REM Ouvrir VS Code avec l'URI du conteneur
 for /f "delims=" %%i in ('docker inspect -f "{{.NetworkSettings.Networks.%PROJECT_NAME%_default.IPAddress}}" %PROJECT_NAME%-db-1') do set DB_IP=%%i
 
 echo IP de la DB: %DB_IP%
-
-start http://localhost:5025/
 
 code --folder-uri=vscode-remote://attached-container+%VSCODE_REMOTE_HEX%/app
 

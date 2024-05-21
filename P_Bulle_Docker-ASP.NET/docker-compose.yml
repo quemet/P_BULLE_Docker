@@ -1,9 +1,7 @@
 version: '3.8'
 services:
   db:
-    build:
-      context: ../Database
-      dockerfile: Dockerfile
+    image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mydatabase
@@ -11,25 +9,27 @@ services:
       - '3306:3306'
     volumes:
       - db-data:/var/lib/mysql
+      - ../Database/P_Bulle-Docker.sql:/docker-entrypoint-initdb.d/P_Bulle-Docker.sql
   dev:
     build:
       context: .
       dockerfile: Dockerfile
       target: development
     ports:
-      - '9721:80'  
-      - '443:443'
+      - '9721:80'
     volumes:
       - .:/app
     depends_on:
       - db
   test:
     build:
-       context: ../test
-       dockerfile: Dockerfile
+      context: ..
+      dockerfile: Dockerfile.test
     depends_on:
       - db
-      - webapp
+    volumes:
+      - ../test:/app/test
+      - ./test_results:/app/test_results
 volumes:
   db-data:
 networks:

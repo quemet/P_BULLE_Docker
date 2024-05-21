@@ -8,10 +8,9 @@ namespace test
     {
         public bool UtilToCheckTablesDataIsEmpty(string table)
         {
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
-                MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;password=root;port=6033;database=db_ouvrage");
-
                 conn.Open();
 
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM " + table, conn);
@@ -23,6 +22,7 @@ namespace test
                     {
                         if (reader.GetString(0).Length > 0)
                         {
+                            conn.Close();
                             return true;
                         }
                     }
@@ -30,23 +30,25 @@ namespace test
                     {
                         if (reader.GetInt32(0).ToString().Length > 0)
                         {
+                            conn.Close();
                             return true;
                         }
                     }
                 }
 
+                conn.Close();
                 return true;
             } catch
             {
+                conn.Close();
                 return false;
             }
         }
         public bool UtilToCheckTableIsEmpty(string table)
         {
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
-                MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;password=root;port=6033;database=db_ouvrage");
-
                 conn.Open();
 
                 bool isOneColumn = false;
@@ -64,11 +66,11 @@ namespace test
                 }
 
                 conn.Close();
-
                 return isOneColumn;
             }
             catch
             {
+                conn.Close();
                 return false;
             }
         }
@@ -76,26 +78,27 @@ namespace test
         [TestMethod]
         public void TestConnectionToTheServer()
         {
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
-                MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;pwd=root;port=6033");
-
                 conn.Open();
 
                 Assert.AreEqual(true, true, "Connected sucessfully to the database");
-            } catch 
+
+                conn.Close();
+            } catch(Exception ex) 
             {
-                Assert.Fail("Cannot connect to the database");;
+                Assert.Fail("Cannot connect to the database \n\n " + ex);
+                conn.Close();
             }
         }
 
         [TestMethod]
         public void TestDatabaseCreated()
         {
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
-                MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;pwd=root;port=6033");
-
                 conn.Open();
 
                 string[] baseDb = new string[] { "information_schema", "mysql", "performance_schema", "sys" };
@@ -118,24 +121,24 @@ namespace test
                 Assert.IsTrue(isNewDatabase, "A useful database has been created");
 
                 conn.Close();
-            } catch
+            } catch(Exception ex)
             {
-                Assert.Fail("Cannot connect to the database");;
+                Assert.Fail("Cannot connect to the database \n\n " + ex);
+                conn.Close();
             }
         }
 
         [TestMethod]
         public void TestDatabaseIsEmpty() 
         {
-            MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;pwd=root;port=6033");
-
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
 
                 bool isOneTable = false;
 
-                MySqlCommand cmd = new MySqlCommand("SHOW TABLES FROM db_ouvrage", conn);
+                MySqlCommand cmd = new MySqlCommand("SHOW TABLES FROM db_bulle_docker", conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -150,9 +153,11 @@ namespace test
                 Assert.IsTrue(isOneTable, "Some Table has been created for the application");
 
                 conn.Close();
-            } catch
+            } catch(Exception ex)
             {
-                Assert.Fail("Cannot connect to the database");;
+                Assert.Fail("Cannot connect to the database \n\n " + ex);
+
+                conn.Close();
             }
         }
 
@@ -161,8 +166,7 @@ namespace test
         { 
             List<bool> bools = new List<bool>();
 
-            MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;password=root;port=6033;database=db_ouvrage");
-
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -178,9 +182,13 @@ namespace test
                 bool isFalse = bools.Contains(false);
 
                 Assert.IsTrue(!isFalse, "The table is not empty");
-            } catch
+
+                conn.Close();
+            } catch(Exception ex)
             {
-                Assert.Fail("Cannot connect to the database");;
+                Assert.Fail("Cannot connect to the database \n\n " + ex);
+
+                conn.Close();
             }
         }
 
@@ -189,8 +197,7 @@ namespace test
         {
             List<bool> bools = new List<bool>();
 
-            MySqlConnection conn = new MySqlConnection("server=localhost;uid=root;password=root;port=6033;database=db_ouvrage");
-
+            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -206,17 +213,21 @@ namespace test
                 bool isFalse = bools.Contains(false);
 
                 Assert.IsTrue(!isFalse, "The table contain Data");
+
+                conn.Close();
             }
-            catch
+            catch(Exception ex)
             {
-                Assert.Fail("Cannot connect to the database");
+                Assert.Fail("Cannot connect to the database \n\n " + ex);
+
+                conn.Close();
             }
         }
 
         [TestMethod]
         public void TestMethod1()
         {
-            Assert.AreEqual(OperatingSystem.IsWindows(), true, "The operating system is correct");
+            Assert.AreEqual(OperatingSystem.IsWindows(), false, "The operating system is correct");
         }
     }
 }

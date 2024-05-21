@@ -47,4 +47,4 @@ echo ""
 
 sudo docker-compose up -d
 
-# xdg-open 'http://localhost:8080'
+xdg-open 'http://localhost:8080'
