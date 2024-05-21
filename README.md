@@ -30,6 +30,7 @@ Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotn
 
 ### 3. Nouveau Projet ?
 
-Nous avions un premier projet dans le but était de conteneriser une application .NET. J'ai choisi une application ASP.NET.
-Un deuxième projet a suivi est dans celui ci il a fallu conteneriser l'environment de développement avec. 
+Nous avions un premier projet dans le but était de conteneriser une application .NET.  
+J'ai choisi une application ASP.NET.  
+Un deuxième projet a suivi est dans celui ci il a fallu conteneriser l'environment de développement avec.  
 Pour avoir plus d'information, veuillez consulter [la documentation](./P_Bulle_Docker-ASP.NET/Documentation.md)
