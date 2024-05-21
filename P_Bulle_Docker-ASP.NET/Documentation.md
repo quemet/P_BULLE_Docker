@@ -294,6 +294,29 @@ endlocal
 #### Lancement de l'application
 
 ```sh
+#!/bin/bash
 
+# Crée un certificat https
+dotnet dev-certs https
+
+# Informe et installe sudo
+echo ""
+echo "Installtion de sudo"
+apt-get update
+apt-get install sudo
+echo ""
+
+# Informe et installe xdg
+echo ""
+echo "Installer les dépendances nécessaires à xdg"
+sudo apt-get update
+sudo apt-get install xdg-utils
+echo ""
+
+# xdg-open permet d'ouvrir une page web
+xdg-open 'https://localhost:7218'
+
+# Lance l'application ASP.NET
+dotnet run
 ```
 
