@@ -34,3 +34,16 @@ Nous avions un premier projet dans le but était de conteneriser une application
 J'ai donc choisi une application ASP.NET au dans le projet de base.  
 Un deuxième projet a suivi est dans celui ci il a fallu conteneriser l'environment de développement avec.  
 Pour avoir plus d'information, veuillez consulter [la documentation](./P_Bulle_Docker-ASP.NET/Documentation.md)
+
+### 4. Explication des commandes de base Dockerfile
+
+* CMD	-> 
+* COPY -> Permet de copier un dossier ou des fichiers
+* ENTRYPOINT
+* ENV	-> Permet de mettre des variables d'environment
+* EXPOSE -> Expose un port comme le 80
+* FROM -> Crée une nouvelle étape comme le build / deploiement à partir d'une image de base
+* RUN	Execute build commands.
+* WORKDIR	Change working directory.
+
+### 5. Explication des commande de base docker-compose
