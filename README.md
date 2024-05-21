@@ -8,7 +8,7 @@ Mon application est une app en APS.NET qui est donc une application Web avec du 
 Elle consiste a recrée en tout cas un niveau du célébre jeux mobile 'Geometry Dash' avec pour l'instant uniquement un seul niveau.  
 Donc cela sera une application en 2 dimensions. 
 Vu le temps imposé c'est compliqué de finire mais le but est de dockeriser l'application ASP.NET et la base de données MySQL.
-Dans ce Readme le but est de présenter les conteneurs utilisé et présenter le dockerfile.
+Dans ce Readme le but est de présenter le projet, pour avois plus d'information. Veuillez consulter [la documentation](./P_Bulle_Docker-ASP.NET/Documentation.md)
 Pour avoir plus d'information sur APS.NET : [APS.NET Dcoumentation](https://dotnet.microsoft.com/en-us/apps/aspnet)
 
 ### &nbsp; 2. Languages, Framework and Outils 🛠
