@@ -4,7 +4,9 @@
 
 Il y a deux façons de faire des containeurs :
 
-### Création avec le devContaineurs de Docker
+### Façon n°1
+
+#### Création du DevContainer
 
 En suivant les étapes suivantes :
 ![Etape n°1](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_01.png)
@@ -20,7 +22,15 @@ On attend que docker fasse sont travail.
 ![Etape n°7](https://github.com/quemet/P_BULLE_Docker/blob/main/Image/Documentation/Screen_07.png)  
 C'est fini le containeur est crée. On peut l'ouvrir avec VS Code.
 
-### Création avec un script bat
+#### Lancement du programme
+
+Je lance mon programme avec un script en [bash](./build.sh)
+
+```sh
+
+```
+
+### Façon n°2
 
 [Script pour lancer les containeurs et l'application](setup.bat)
 
