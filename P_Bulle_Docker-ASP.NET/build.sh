@@ -1,9 +1,9 @@
 #!/bin/bash
 # Défini un tableau avec les contianers
-containers=('application' 'mysql' 'test')
+containers=('myprojectdocker-test-1' 'myprojectdocker-dev-1' 'myprojectdocker-db-1')
 
 # Défini un tableau avec les images
-images=('p_bulle_docker-aspnet-db' 'p_bulle_docker-aspnet-test' 'p_bulle_docker-aspnet-webapp')
+images=('mysql' 'myprojectdocker_dev' 'myprojectdocker_test', 'geircode/string_to_hex')
 
 # Informet l'utilisateur du début du script
 echo ""
