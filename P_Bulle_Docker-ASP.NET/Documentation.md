@@ -38,67 +38,59 @@ Je lance mon programme avec un script en [bash](./build.sh)
 
 ```sh
 #!/bin/bash
-
-# Crée un tableau avec le nom des images
+# Défini un tableau avec les contianers
 containers=('application' 'mysql' 'test')
 
-# Crée un tableau avec le nom des containers
+# Défini un tableau avec les images
 images=('p_bulle_docker-aspnet-db' 'p_bulle_docker-aspnet-test' 'p_bulle_docker-aspnet-webapp')
 
-# Affiche un message pour dire à l'utilisateur ce que va faire le script
+# Informet l'utilisateur du début du script
 echo ""
 echo "Supprimer les conteneurs..."
 echo ""
 
-# Crée une variable qui est l'incrément des étapes
+# Défini les variables pour un meilleur interaction utilisateurs
 count=1
-
-# Crée une variable avec tout les étapes
 total_step=6
 
-# Fais une boucle sur le tableau des containers
+# Boucle sur le tableau des containers
 for container in "${containers[@]}"
 do
-
-    # Affiche l'étape avec le nom du container, le stoppe et le supprimme
+    # Informe, stoppe et supprimme les containers dans le tableau
     echo ""
     echo "[Step $count/$total_step] En train de supprimer le conteneur $container..."
     sudo docker stop $container
     sudo docker rm $container
     echo "Conteneur $container a été supprimé"
     echo ""
-
-    # Incrémente la valeur de count
+    # Incrémente la variable count pour avoir un suivi
     ((count++))
 done
 
-# Fais une boucle sur le tableau des images
+# Boucle sur le tableau des images
 for image in "${images[@]}"
 do
-
-    # Affiche l'étape avec le nom de l'image et la supprimme
+    # Informe et supprimme les images dans le tableau
     echo ""
     echo "[Step $count/$total_step] En train de supprimer l'image $image..."
     sudo docker rmi $image
     echo "Image $image a été supprimée"
     echo ""
-
-    # Incrémente la valeur de count
+    # Incrémente la variable count pour avoir un suivi
     ((count++))
 done
 
-# Informe l'utilisateur que les containeurs et images ont été supprimmé
+# Informe l'utilisateur que toute à réussi
 echo ""
 echo "Tous les conteneurs et images ont été supprimés."
 echo ""
 
-
-# Informe l'utilisateur que les containerus vont être lancé
+# Informe l'utilisateur du démarrage des services
 echo ""
 echo "Démarrage des services avec docker-compose..."
 echo ""
 
-# Informe et installe les dépendances de xdg
+# Informe et installe la librairie xdg
 echo ""
 echo "Installer les dépendances nécessaires à xdg"
 sudo apt-get update
@@ -106,10 +98,10 @@ sudo apt-get upgrade
 sudo apt-get install xdg-utils
 echo ""
 
-# Lance le docker-compose pour la création des containeurs
+# Lance la création des services
 sudo docker-compose up -d
 
-# Ouvre une page web sur l'url suivante
+# Ouvre une page web à l'url suivante.
 xdg-open 'http://localhost:8080'
 ```
 
@@ -132,57 +124,22 @@ if not exist "test_results" (
     mkdir test_results
 )
 
+REM Défini un tableau avec les containers
 set "containers=myprojectdocker-db-1,myprojectdocker-dev-1,myprojectdocker-test-1"
+
+REM Défini un tableau avec les images
 set "images=geircode/string_to_hex,myprojectdocker_dev,myprojectdocker_test,mysql"
 
+REM Boucle sur le tableau des containers et stoppe et supprimme le container
 for %%c in (%containers%) do (
     docker stop %%c
     docker rm %%c
 )
 
+REM Boucle sur le tableau des images et supprimme l'image
 for %%i in (%images%) do (
     docker rmi %%i
 )
-
-REM Création du fichier docker-compose.yaml
-(
-echo version: '3.8'
-echo services:
-echo   db:
-echo     image: mysql
-echo     environment:
-echo       MYSQL_ROOT_PASSWORD: root
-echo       MYSQL_DATABASE: mydatabase
-echo     ports:
-echo       - '3306:3306'
-echo     volumes:
-echo       - db-data:/var/lib/mysql
-echo       - ../Database/P_Bulle-Docker.sql:/docker-entrypoint-initdb.d/P_Bulle-Docker.sql
-echo   dev:
-echo     build:
-echo       context: .
-echo       dockerfile: Dockerfile
-echo       target: development
-echo     ports:
-echo       - '9721:80'
-echo     volumes:
-echo       - .:/app
-echo     depends_on:
-echo       - db
-echo   test:
-echo     build:
-echo       context: ..
-echo       dockerfile: Dockerfile.test
-echo     depends_on:
-echo       - db
-echo     volumes:
-echo       - ../test:/app/test
-echo       - ./test_results:/app/test_results
-echo volumes:
-echo   db-data:
-echo networks:
-echo   default:
-) > docker-compose.yml
 
 REM Vérifier l'existence de fichiers .csproj
 if not exist "*.csproj" (
@@ -217,59 +174,13 @@ for /F "delims=" %%I in ('dir bin\Debug\%DOTNET_VERSION%\*.exe /b /a-d') do (
     set "EXE_NAME=%%~nI"
     goto build_docker
 )
-echo Génération du Dockerfile avec .NET SDK version: %DOTNET_VERSION%
-
-:build_docker
-REM Générer le Dockerfile pour le conteneur de développement
-(
-echo # syntax=docker/dockerfile:1
-echo # Stage 1: Build the application
-echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-echo WORKDIR /app
-echo # Copy csproj and restore as distinct layers
-echo COPY ./P_Bulle_Docker.csproj ./
-echo RUN dotnet restore ./P_Bulle_Docker.csproj
-echo # Copy everything else and build
-echo COPY . .
-echo RUN dotnet publish ./P_Bulle_Docker.csproj -c Release -o out
-echo # Stage 2: Development environment
-echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS development
-echo WORKDIR /app
-echo COPY --from=build /app/out .
-echo ENTRYPOINT ["dotnet", "watch", "--project", "P_Bulle_Docker.csproj"]
-echo # Stage 3: Production environment
-echo FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS production
-echo WORKDIR /app
-echo COPY --from=build /app/out .
-echo EXPOSE 80
-echo RUN dotnet dev-certs https
-echo ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]
-) > Dockerfile
-
-REM Générer le Dockerfile pour le conteneur de test
-(
-echo # syntax=docker/dockerfile:1
-echo FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-echo WORKDIR /app
-echo # Copier les dossiers de l'application et des tests
-echo COPY P_Bulle_Docker-ASP.NET/ ./P_Bulle_Docker-ASP.NET/
-echo COPY test/ ./test/
-echo # Restaurer et construire l'application
-echo RUN dotnet restore P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj
-echo RUN dotnet build P_Bulle_Docker-ASP.NET/P_Bulle_Docker.csproj -c Release
-echo # Restaurer et construire les tests
-echo RUN dotnet restore test/test.csproj
-echo RUN dotnet build test/test.csproj -c Release
-echo # Définir le répertoire de travail pour les tests
-echo WORKDIR /app/test
-echo # Définir la commande pour exécuter les tests et enregistrer les résultats
-echo CMD ["dotnet", "test", "test.csproj", "--logger", "trx;LogFileName=test_results.trx", "--results-directory", "/app/test_results"]
-) > ../Dockerfile.test
 
 REM Démarrer les services
 docker-compose -p %PROJECT_NAME% up -d
 
+REM Défini le nom du containeur
 set CONTAINER_NAME=%PROJECT_NAME%-dev-1
+
 REM générer le code hexadécimal du conteneur
 docker run --rm geircode/string_to_hex bash string_to_hex.bash "%CONTAINER_NAME%" > vscode_remote_hex.txt
 
@@ -279,8 +190,10 @@ set /p VSCODE_REMOTE_HEX=<vscode_remote_hex.txt
 REM Ouvrir VS Code avec l'URI du conteneur
 for /f "delims=" %%i in ('docker inspect -f "{{.NetworkSettings.Networks.%PROJECT_NAME%_default.IPAddress}}" %PROJECT_NAME%-db-1') do set DB_IP=%%i
 
+REM Afficher l'IP de la DB
 echo IP de la DB: %DB_IP%
 
+REM Ouvre VSCode
 code --folder-uri=vscode-remote://attached-container+%VSCODE_REMOTE_HEX%/app
 
 REM Nettoyer le fichier temporaire
@@ -293,10 +206,10 @@ endlocal
 
 #### Lancement de l'application
 
+Script [bash](./launch.sh) pour lancer l'application
+
 ```sh
 #!/bin/bash
-
-# Crée un certificat https
 dotnet dev-certs https
 
 # Informe et installe sudo
@@ -313,10 +226,10 @@ sudo apt-get update
 sudo apt-get install xdg-utils
 echo ""
 
-# xdg-open permet d'ouvrir une page web
+# Lance une page web avec l'url suivante
 xdg-open 'https://localhost:7218'
 
-# Lance l'application ASP.NET
+# lance l'application .NET
 dotnet run
 ```
 
