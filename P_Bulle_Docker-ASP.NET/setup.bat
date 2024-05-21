@@ -22,7 +22,7 @@ for %%i in (%images%) do (
     docker rmi %%i
 )
 
-REM Création du fichier docker-compose.yaml
+REM Création du fichier docker-compose.yml
 (
 echo version: '3.8'
 echo services:
@@ -95,7 +95,7 @@ for /F "delims=" %%I in ('dir bin\Debug\%DOTNET_VERSION%\*.exe /b /a-d') do (
     set "EXE_NAME=%%~nI"
     goto build_docker
 )
-echo Génération du Dockerfile avec .NET SDK version: %DOTNET_VERSION%
+echo Génération du Dockerfile avec .NET SDK version: 6.0
 
 :build_docker
 REM Générer le Dockerfile pour le conteneur de développement
