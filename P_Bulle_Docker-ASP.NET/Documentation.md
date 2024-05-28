@@ -498,3 +498,19 @@ volumes:
 networks:
   default:
 ```
+
+### Diagramme de docker-compose
+
+J'ai utilisé le repo github de [pmsipilot/docker-compose-viz](https://github.com/pmsipilot/docker-compose-viz)
+
+Si jamais votre commande ne fonctionne pas alors essayez celle-ci :
+
+Remplacer le $(pwd) par le chemin absolu vers le dossier du docker-compose.yml
+
+```sh
+docker run --rm -it --name dcv -v C:/Users/pg03lul/Desktop/P_BULLE_Docker/P_BULLE_Docker-ASP.NET:/input pmsipilot/docker-compose-viz render -m image docker-compose.yml
+```
+
+Voici le diagramme :
+
+![Diagramme de l'environment Docker](../Image/Documentation/docker-compose.png)
