@@ -8,7 +8,7 @@ namespace test
     {
         public bool UtilToCheckTablesDataIsEmpty(string table)
         {
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -46,7 +46,7 @@ namespace test
         }
         public bool UtilToCheckTableIsEmpty(string table)
         {
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -78,7 +78,7 @@ namespace test
         [TestMethod]
         public void TestConnectionToTheServer()
         {
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -96,7 +96,7 @@ namespace test
         [TestMethod]
         public void TestDatabaseCreated()
         {
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -131,7 +131,7 @@ namespace test
         [TestMethod]
         public void TestDatabaseIsEmpty() 
         {
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -166,7 +166,7 @@ namespace test
         { 
             List<bool> bools = new List<bool>();
 
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();
@@ -197,7 +197,7 @@ namespace test
         {
             List<bool> bools = new List<bool>();
 
-            MySqlConnection conn = new MySqlConnection("server=172.21.0.2;uid=root;pwd=root;port=3306;database=db_bulle_docker");
+            MySqlConnection conn = new MySqlConnection("server=db;uid=root;pwd=root;port=3306;database=db_bulle_docker");
             try
             {
                 conn.Open();

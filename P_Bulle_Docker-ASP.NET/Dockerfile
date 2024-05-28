@@ -1,30 +1,30 @@
-# On utilise le sdk avec net 6.0
+# Fais le build de l'application
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-# On défini le dossier de travail à /app
+# Défini le dossier de travail
 WORKDIR /app
-# On copie le csproj dans le dossier actuel
+# Copie le csproj
 COPY ./P_Bulle_Docker.csproj ./
-# On restore les librairies avec le csproj
+# restore les librairies du csproj
 RUN dotnet restore ./P_Bulle_Docker.csproj
-# On copie le reste
+# Copie tout les fichiers du dossier
 COPY . .
-# On publish
+# Comile l'application et met le résultat dans un dossier
 RUN dotnet publish ./P_Bulle_Docker.csproj -c Release -o out
-# On utilise le sdk avec net6.0
+# Fais l'environment de developement
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS development
-# On défini le dossier de travail comme /app
+# Défini le dossier de travail
 WORKDIR /app
-# Copie tout du build
+# Copie tout depui l'étape de build
 COPY --from=build /app/out .
-# Au moment du lancement du container on effectue la commande suivante
+# Permet de relancer l'application lors qu'on change un fichier
 ENTRYPOINT ["dotnet", "watch", "--project", "P_Bulle_Docker.csproj"]
-# On utilise ASP.NET avec net6.0
+# L'environment de production
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS production
-# On défini le dossier de travail comme /app
+# Défini le dossier de travail
 WORKDIR /app
-# Copie tout du build
+# Copie depuis l'étape de build
 COPY --from=build /app/out .
-# On expose le port 80
+# Expose le port 80
 EXPOSE 80
-# On lance le programme
+# Run l'application au lancement du containeur
 ENTRYPOINT ["dotnet", "P_Bulle_Docker.dll"]

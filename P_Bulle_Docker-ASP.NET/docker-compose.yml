@@ -1,61 +1,59 @@
-# On défini la version
+# Défini la version de docker-compose
 version: '3.8'
-
-# On va définir les différents services
+# Défini les services
 services:
-
-  # On défini un service de base de données
+  # Défini un service de db
   db:
-    # On défini l'image comme mysql
-    image: mysql
-    # On défini des variables d'environment
+    # Défini l'image du containeur
+    image: mysql:latest
+    # Défini des variables d'environment
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mydatabase
-    # On défini les ports pour la base de données
+    # Défini les ports du containeur
     ports:
       - '3306:3306'
-    # On défini des volumes
+    # Défini un volume de db-data
     volumes:
       - db-data:/var/lib/mysql
-      - ../Database/P_Bulle-Docker.sql:/docker-entrypoint-initdb.d/P_Bulle-Docker.sql
-  # On défini un service de developement
+  # Défini un service de développement
   dev:
-    # On défini l'image du container
+    # Défini le build de l'image
     build:
-      # On défini le dossier ou est stocké le dockerfile
+      # Défini le chemin jusqu'au Dockerfile
       context: .
-      # On défini le nom du Dockerfile
+      # Défini le nom du dockerfile
       dockerfile: Dockerfile
-      # On défini quel stage on choisi
+      # Défini quel étape prendre
       target: development
-    # On défini les ports
+    # Défini les ports
     ports:
-      - '9721:80'
-    # On défini des volumes
+      - '9721:80'  
+      - '443:443'
+    # Défini un volume
     volumes:
       - .:/app
-    # On défini les dépendeances pour ce container
+    # Dépends de certain service
     depends_on:
       - db
-  # On défini un service de test
+  # Défini un service de test
   test:
-    # On défini l'image du container
+    # Défini le build de l'image
     build:
-      # On défini le répertoire ou est le Dockerfile
+      # Défini le chemin du dockerfile
       context: ..
-      # On défini le nom du Dockerfile
+      # Défini le nom du dockerfile
       dockerfile: Dockerfile.test
-    # On défini les dépendances
+    # Défini les dépendances du containeur
     depends_on:
       - db
-    # On défini des volumes pour le service
+    # Défini les volumes
     volumes:
       - ../test:/app/test
       - ./test_results:/app/test_results
-# On défini les volumes
+# Défini les volumes
 volumes:
   db-data:
-# On défini les réseaux
+# Défini le réseau
 networks:
   default:

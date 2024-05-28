@@ -1,9 +1,9 @@
 #!/bin/bash
-# Défini un tableau avec les contianers
-containers=('myprojectdocker-test-1' 'myprojectdocker-dev-1' 'myprojectdocker-db-1')
+# Défini un tableau avec les containers
+containers=('myprojectdocker_test_1' 'myprojectdocker_dev_1' 'myprojectdocker_db_1')
 
 # Défini un tableau avec les images
-images=('mysql' 'myprojectdocker_dev' 'myprojectdocker_test', 'geircode/string_to_hex')
+images=('mysql' 'myprojectdocker_dev' 'myprojectdocker_test' 'geircode/string_to_hex')
 
 # Informet l'utilisateur du début du script
 echo ""
@@ -55,12 +55,9 @@ echo ""
 echo ""
 echo "Installer les dépendances nécessaires à xdg"
 sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install xdg-utils
+sudo apt-get upgrade -y
+sudo apt-get install -y xdg-utils
 echo ""
 
 # Lance la création des services
-sudo docker-compose up -d
-
-# Ouvre une page web à l'url suivante.
-xdg-open 'http://localhost:8080'
+docker-compose up -d
