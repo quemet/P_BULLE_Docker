@@ -34,7 +34,7 @@ C'est fini le containeur est crée. On peut l'ouvrir avec VS Code.
 
 #### Lancement du programme
 
-Je lance mon programme avec un script en [bash](./build.sh).
+Je lance mon programme avec un script en [bash](./build.sh).  
 Avec la commande suivante :
 
 ```sh
@@ -114,7 +114,8 @@ docker-compose up -d
 
 #### Création des containers
 
-Dans la façon numéro 2. Nous démarron nos containeurs avec un [script bat](./setup.bat)
+Dans la façon numéro 2.  
+Nous démarrons nos containeurs avec un [script bat](./setup.bat)
 
 ```bat
 @echo off
@@ -331,7 +332,7 @@ endlocal
 
 #### Lancement de l'application
 
-Script [bash](./launch.sh) pour lancer l'application.
+Script [bash](./launch.sh) pour lancer l'application.  
 Avec la commande suivante :
 
 ```sh
